@@ -1,3 +1,5 @@
+## Further development of our Chess game as software product for the lecture Software Architecture at HTWG Konstanz
+
 ![bannerImage](chess_banner.jpeg)
 
 ---
@@ -10,12 +12,12 @@
 
 ---
 
-# How to run Docker container with X11
+## How to run Docker container with X11
 
-## Building the Container
+### Building the Container
 ```docker build -t chess:v1 .```
 
-## Running the Container
+### Running the Container
 ```
 xhost +
 
@@ -29,6 +31,6 @@ xhost -
 ---
 
 ## Contributors
-| [PanterSoft](https://github.com/PanterSoft)  |  [TeefanDev](https://github.com/TeefanDev) |
+| [Julian Klimek](https://github.com/julienco03)  |  [TeefanDev](https://github.com/TeefanDev) |
 |---|---|
-| ![image](https://github-readme-streak-stats.herokuapp.com/?user=PanterSoft) | ![image](https://github-readme-streak-stats.herokuapp.com/?user=TeefanDev)  |
+| ![image](https://github-readme-streak-stats.herokuapp.com/?user=julienco03) | ![image](https://github-readme-streak-stats.herokuapp.com/?user=TeefanDev)  |

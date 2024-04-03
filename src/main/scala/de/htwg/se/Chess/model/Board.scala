@@ -27,7 +27,7 @@ import com.google.inject.Inject
 
 
 
-case class Board @Inject() (var board: VectorMap[String, String]) extends BoardInterface {
+case class Board @Inject() (val board: VectorMap[String, String]) extends BoardInterface {
     override def move(pos_now: String, pos_new: String): Board =
         val figure = board.get(pos_now)
 

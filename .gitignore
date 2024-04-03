@@ -40,3 +40,7 @@ null/
 .cache-main
 Notizen.txt
 .coveralls.yml
+
+# Chess board data
+*.json
+*.xml

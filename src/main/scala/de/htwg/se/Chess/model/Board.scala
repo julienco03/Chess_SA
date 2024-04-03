@@ -139,38 +139,36 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
         else
             false
 
-    def king(pos_now: String, pos_new: String): Boolean =
-        if (different_player(pos_now, pos_new) && xy_equal(pos_now, pos_new) == false && x_y_maxlength(pos_now, pos_new) == 1)
-            return true
-        return false
+def king(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if different_player(posNow, posNew) && !xy_equal(posNow, posNew) && x_y_maxlength(posNow, posNew) == 1 => true
+  case _ => false
+}
 
-    def queen(pos_now: String, pos_new: String): Boolean =
-        if (different_player(pos_now, pos_new) && xy_equal(pos_now, pos_new) || x_or_y(pos_now, pos_new))
-            return true
-        return false
+def queen(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if different_player(posNow, posNew) && (xy_equal(posNow, posNew) || x_or_y(posNow, posNew)) => true
+  case _ => false
+}
 
-    def bishop(pos_now: String, pos_new: String): Boolean =
-        if(different_player(pos_now, pos_new) && xy_equal(pos_now, pos_new))
-            return true
-        return false
+def bishop(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if different_player(posNow, posNew) && xy_equal(posNow, posNew) => true
+  case _ => false
+}
 
-    def knight(pos_now: String, pos_new: String): Boolean =
-        if(different_player(pos_now, pos_new) && (x_diff(pos_now, pos_new) == 2 && y_diff(pos_now, pos_new) == 1 || x_diff(pos_now, pos_new) == 1 && y_diff(pos_now, pos_new) == 2))
-            return true
-        return false
+def knight(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if different_player(posNow, posNew) && ((x_diff(posNow, posNew) == 2 && y_diff(posNow, posNew) == 1) || (x_diff(posNow, posNew) == 1 && y_diff(posNow, posNew) == 2)) => true
+  case _ => false
+}
 
-    def rook(pos_now: String, pos_new: String): Boolean =
-        if(different_player(pos_now, pos_new) && x_or_y(pos_now, pos_new))
-            return true
-        return false
+def rook(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if different_player(posNow, posNew) && x_or_y(posNow, posNew) => true
+  case _ => false
+}
 
-    def pawn(pos_now: String, pos_new: String): Boolean =
-        if ((get_player(pos_now) == "1" || get_player(pos_now) == "2") && (y_diff(pos_now, pos_new) == 1 || (y_diff(pos_now, pos_new) == 2)) && x_or_y(pos_now, pos_new) && forward_move(pos_now, pos_new)) // Move (1 or 2 Field)
-            return true
-        else if (x_diff(pos_now, pos_new) == 1 && y_diff(pos_now, pos_new) ==   1 && (different_player(pos_now, pos_new) && get_player(pos_now) == "1" && forward_move(pos_now, pos_new) && empty_field(pos_new) != true || different_player(pos_now, pos_new) && get_player(pos_now) == "2" && forward_move(pos_now, pos_new) && empty_field(pos_new) != true)) // Attack Move
-            return true
-        return false
-
+def pawn(pos_now: String, pos_new: String): Boolean = (pos_now, pos_new) match {
+  case (posNow, posNew) if (get_player(posNow) == "1" || get_player(posNow) == "2") && (y_diff(posNow, posNew) == 1 || (y_diff(posNow, posNew) == 2)) && x_or_y(posNow, posNew) && forward_move(posNow, posNew) => true // Move (1 or 2 Field)
+  case (posNow, posNew) if x_diff(posNow, posNew) == 1 && y_diff(posNow, posNew) == 1 && (different_player(posNow, posNew) && get_player(posNow) == "1" && forward_move(posNow, posNew) && empty_field(posNew) != true || different_player(posNow, posNew) && get_player(posNow) == "2" && forward_move(posNow, posNew) && empty_field(posNew) != true) => true // Attack Move
+  case _ => false
+}
 
 
     val eol = sys.props("line.separator")

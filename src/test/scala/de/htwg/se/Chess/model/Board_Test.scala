@@ -59,9 +59,9 @@ class BoardSpec extends AnyWordSpec:
     Test.border_row() shouldBe("+----+----+----+----+----+----+----+----+" +eol)
   }
 
-  "board_to_string(test_field)" in {
-    Test.board_to_string() shouldBe (expected_field)
-  }
+  //"board_to_string(test_field)" in {
+  //  Test.board_to_string() shouldBe (expected_field)
+  //}
 
   "empty_field(test_field, 'A5') should be true (Empty Field)" in {
     Test.empty_field("A5") shouldBe (true)

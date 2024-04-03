@@ -12,25 +12,31 @@ import scala.collection.immutable.VectorMap
 
 class FileIO extends FileIOInterface {
 
-  override def load(): Board =
+  override def load(): Board = {
     // load game from file
     val source = scala.xml.XML.loadFile("board.xml")
-    val xml = XML.loadString(source.mkString)
-    var field: VectorMap[String, String] = VectorMap[String, String]()
 
-    for (index <- 0 until 8 * 8) {
-      val pos = ((xml \\ "pos")(index)).text.trim()
-      val figure = ((xml \\ "figure")(index)).text.trim()
+    def updateField(index: Int, field: VectorMap[String, String]): VectorMap[String, String] = {
+      if (index < 8 * 8) {
+        val pos = ((source \\ "pos")(index)).text.trim()
+        val figure = ((source \\ "figure")(index)).text.trim()
 
-      if (figure == "__") {
-        val figure_r = "  "
-        field = field.updated(pos, figure_r)
+        val updatedField = if (figure == "__") {
+          field.updated(pos, "  ")
+        } else {
+          field.updated(pos, figure)
+        }
+
+        updateField(index + 1, updatedField)
       } else {
-        field = field.updated(pos, figure)
+        field
       }
-
     }
-    Board(field)
+
+    val initialField: VectorMap[String, String] = VectorMap[String, String]()
+    val finalField = updateField(0, initialField)
+    Board(finalField)
+  }
 
   override def save(game: BoardInterface): Unit =
     // write game to file
@@ -38,22 +44,16 @@ class FileIO extends FileIOInterface {
     pw.write(vectorMapToXml(game).toString())
     pw.close()
 
-  def vectorMapToXml(board_object: BoardInterface) =
-    <game>
-      {for ((pos, figure) <- board_object.board) yield {
-        <pos>
-          {pos}
-        </pos>
-        <figure>
-          {
-            if (figure == "  ") {
-              "__"
-            } else {
-              figure
-            }
-          }
-        </figure>
-        }
+  def vectorMapToXml(board_object: BoardInterface): Elem = {
+    def convertEntriesToXml(entries: Vector[(String, String)]): Seq[scala.xml.Node] = {
+      entries.flatMap { case (pos, figure) =>
+        val figureText = if (figure == "  ") "__" else figure
+        Seq(<pos>{pos}</pos>, <figure>{figureText}</figure>)
       }
-    </game>
+    }
+
+    val entriesXml = convertEntriesToXml(board_object.board.toVector)
+    <game>{entriesXml}</game>
+  }
+
 }

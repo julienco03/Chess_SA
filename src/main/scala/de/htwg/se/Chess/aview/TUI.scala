@@ -22,8 +22,7 @@ class tui(controller: ControllerInterface) extends Observer{
         case None =>
         case Some(s) => println(s)
 
-    def readTextIn(in_new:String) : Try[List[String]] =
-      Try(in_new.split(" ").toList)
+    val readTextIn: String => Try[List[String]] = in => Try(in.split(" ").toList)
 
     def checkRegex(input_string: String, regex_pattern: Regex): Boolean =
       regex_pattern.findPrefixOf(input_string) match

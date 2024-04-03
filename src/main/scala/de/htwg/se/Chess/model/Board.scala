@@ -145,13 +145,11 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
         return false
 
     def queen(pos_now: String, pos_new: String): Boolean =
-
         if (different_player(pos_now, pos_new) && xy_equal(pos_now, pos_new) || x_or_y(pos_now, pos_new))
             return true
         return false
 
     def bishop(pos_now: String, pos_new: String): Boolean =
-
         if(different_player(pos_now, pos_new) && xy_equal(pos_now, pos_new))
             return true
         return false

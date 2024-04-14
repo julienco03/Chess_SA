@@ -1,11 +1,12 @@
-package de.htwg.se.Chess.model
+package de.htwg.se.Chess
+package model
 
-import de.htwg.se.Chess.model.Board
+import model.Board
+
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.matchers.must.Matchers
 import scala.collection.immutable.VectorMap
-
 
 class BoardSpec extends AnyWordSpec:
   val Test = Board()

@@ -1,19 +1,17 @@
 package de.htwg.se.Chess
 
-import scala.collection.immutable.VectorMap
-
-import de.htwg.se.Chess.aview.tui
-import de.htwg.se.Chess.controller.ControllerInterface
-import de.htwg.se.Chess.controller.controllerComponent.Controller
-import de.htwg.se.Chess.model._
-import de.htwg.se.Chess.model.FileIOComponent.FileIOjsonImpl._
+import aview.tui
+import controller.ControllerInterface
+import controller.controllerComponent.Controller
+import model._
+import persistence.fileIOComponent.FileIOjsonImpl._
 //only can test xml or json at a time, otherwise copy paste the whole thing for both at same time.
-//import de.htwg.se.Chess.model.FileIOComponent.FileIOxmlImpl._
+//import persistence.fileIOComponent.FileIOxmlImpl._
 
+import scala.collection.immutable.VectorMap
 import scala.language.reflectiveCalls
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
-
 
 class GeneralGameSpec extends AnyWordSpec:
     // Test Init

@@ -3,12 +3,12 @@
 ![bannerImage](chess_banner.jpeg)
 
 ---
-[![Build Status](https://github.com/PanterSoft/Chess/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/PanterSoft/Chess/actions/workflows/scala.yml)
-[![Coverage Status](https://coveralls.io/repos/github/PanterSoft/Chess/badge.svg?branch=main)](https://coveralls.io/github/PanterSoft/Chess?branch=main)
-![RepoSize](https://img.shields.io/github/repo-size/PanterSoft/Chess)
+[![Build Status](https://github.com/julienco03/Chess_SA/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/julienco03/Chess_SA/actions/workflows/scala.yml)
+[![Coverage Status](https://coveralls.io/repos/github/julienco03/Chess_SA/badge.svg?branch=main)](https://coveralls.io/github/julienco03/Chess_SA?branch=main)
+![RepoSize](https://img.shields.io/github/repo-size/julienco03/Chess_SA)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MI)
-![Forks](https://img.shields.io/github/forks/PanterSoft/Chess?color=green&style=social)
-![Watcher](https://img.shields.io/github/watchers/PanterSoft/Chess?style=social)
+![Forks](https://img.shields.io/github/forks/julienco03/Chess_SA?color=green&style=social)
+![Watcher](https://img.shields.io/github/watchers/julienco03/Chess_SA?style=social)
 
 ---
 

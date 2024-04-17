@@ -27,8 +27,8 @@ lazy val root = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
-  .aggregate(controller, logic, ui, utils)
-  .dependsOn(controller, logic, ui, utils)
+  .aggregate(controller, logic, persistence, ui, utils)
+  .dependsOn(controller, logic, persistence, ui, utils)
 
 lazy val controller = project
   .in(file("controller"))
@@ -47,7 +47,6 @@ lazy val logic = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
-  .dependsOn(utils)
 
 lazy val persistence = project
   .in(file("persistence"))
@@ -65,7 +64,7 @@ lazy val ui = project
       commonSettings
     )
   .enablePlugins(CoverallsPlugin)
-  .dependsOn(controller, logic, utils)
+  .dependsOn(controller, utils)
 
 lazy val utils = project
   .in(file("utils"))

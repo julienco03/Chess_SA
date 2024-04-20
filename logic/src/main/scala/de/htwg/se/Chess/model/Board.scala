@@ -4,6 +4,10 @@ package model
 import scala.collection.immutable.VectorMap
 import com.google.inject.Inject
 
+import akka.http.scaladsl.server.Directives.*
+import akka.http.scaladsl.server.Route
+import play.api.libs.json.{JsObject, Json}
+
  /** empty game board
      *  8x8 Grid
      * /----+----+----+----+----+----+----+----\
@@ -147,16 +151,45 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
 
     def top_row(): String = "   A    B    C    D    E    F    G    H  " + eol
 
-    def first_last_row(x_size:Int = 8, first:String = "/", last:String = "\\")= first + ("-" * 4 + "+") * (x_size - 1) + ("-" * 4) + last + eol
+    def first_last_row(x_size: Int = 8, first: String = "/", last: String = "\\") = {
+        val dashRepeat = "-".repeat(4)
+        val middle = dashRepeat + "+"
+        val middleRepeat = middle.repeat(x_size - 1)
+        first + middleRepeat + dashRepeat + last + eol
+    }
 
-    def border_row(x_size:Int = 8) = ("+" + "-" * 4) * x_size + "+" + eol
+    def border_row(x_size: Int = 8) = {
+        val dashRepeat = "-".repeat(4)
+        val pluses = ("+" + dashRepeat).repeat(x_size)
+        pluses + "+" + eol
+    }
 
-    override def board_to_string(): String =
+    override def board_to_string(): String = {
         val map_values = board.values.mkString("| ", " | ", " |").toString()
         val cell_array = map_values.grouped(40).toArray
 
         return top_row() + first_last_row(8) + cell_array(0) + "| 1\n" + border_row() + cell_array(1) + "| 2\n" + border_row() + cell_array(2) + "| 3\n" + border_row() + cell_array(3) + "| 4\n" + border_row() + cell_array(4) + "| 5\n" + border_row() + cell_array(5) + "| 6\n" + border_row() + cell_array(6) + "| 7\n" + border_row() + cell_array(7) + "| 8\n" + first_last_row(8, "\\", "/")
+    }
 
+    override def toJson: JsObject = {
+        Json.obj(
+            "board" ->
+                board_to_string()
+        )
+    }
+
+    override val boardRoute: Route = concat(
+      get {
+        concat(
+          path("board") {
+            complete(board_to_string())
+          },
+          path("") {
+            sys.error("GET Route does not exist")
+          }
+        )
+      }
+    )
 }
 
 object Board {

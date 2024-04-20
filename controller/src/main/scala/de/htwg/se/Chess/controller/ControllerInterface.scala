@@ -1,6 +1,7 @@
 package de.htwg.se.Chess
 package controller
 
+import akka.http.scaladsl.server.Route
 import utils.Observable
 import controller.controllerComponent.GameState._
 import model._
@@ -11,6 +12,8 @@ import play.api.libs.json.JsObject
 
 trait ControllerInterface extends Observable with Publisher{
     var field: Board
+    val controllerRoute: Route
+
     def game_state: GameState
     def board_to_string_c(): String
     def move_c(pos_now : String, pos_new : String) : Unit

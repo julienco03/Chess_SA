@@ -7,6 +7,7 @@ import model._
 
 import scala.swing.event.Event
 import scala.swing.Publisher
+import play.api.libs.json.JsObject
 
 trait ControllerInterface extends Observable with Publisher{
     var field: Board
@@ -22,6 +23,7 @@ trait ControllerInterface extends Observable with Publisher{
     def save:Unit
     def undo(): Unit
     def redo(): Unit
+    def toJson: JsObject
 }
 
 class CellChanged extends Event

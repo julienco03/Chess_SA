@@ -12,6 +12,10 @@ import utils.Observable
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject}
 
+import akka.http.scaladsl.server.Directives.*
+import akka.http.scaladsl.server.Route
+import play.api.libs.json.{JsObject, Json}
+
 case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) extends ControllerInterface:
 
   var game_state: GameState = NO_WINNER_YET
@@ -77,3 +81,50 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
       notifyObservers
       publish(new CellChanged)
   }
+
+  override def toJson: JsObject = {
+    Json.obj(
+      "controller" ->
+        this.field.toJson
+    )
+  }
+
+  override val controllerRoute: Route = concat(
+      get {
+        concat(
+          path("field") {
+            complete(board_to_string_c())
+          },
+          path("") {
+            sys.error("GET Route does not exist")
+          }
+        )
+      },
+      post {
+        concat(
+          path("move" / Segment / Segment) { (x: String, y: String) =>
+            move_c(x, y)
+            complete("Move successful")
+          },
+          path("undo") {
+            undo()
+            complete("Undo successful")
+          },
+          path("redo") {
+            redo()
+            complete("Redo successful")
+          },
+          path("save") {
+            save
+            complete("Save successful")
+          },
+          path("load") {
+            load
+            complete("Load successful")
+          },
+          path("") {
+            sys.error("POST Route does not exist")
+          }
+        )
+      }
+    )

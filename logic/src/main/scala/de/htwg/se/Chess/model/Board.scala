@@ -181,11 +181,8 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
     override val boardRoute: Route = concat(
       get {
         concat(
-          path("board") {
-            complete(board_to_string())
-          },
           path("") {
-            sys.error("GET Route does not exist")
+            complete(board_to_string())
           }
         )
       }

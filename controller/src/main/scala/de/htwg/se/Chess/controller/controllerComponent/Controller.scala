@@ -22,6 +22,12 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
   private val history_manager = new HistoryManager
   val playersystem:PlayerSystem = new PlayerSystem()
 
+  def new_game(): Board =
+    field = Board()
+    notifyObservers
+    publish(new CellChanged)
+    field
+
   def board_to_string_c() : String = field.board_to_string()
 
   def move_c(pos_now : String, pos_new : String) : Unit =
@@ -92,16 +98,10 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
   override val controllerRoute: Route = concat(
       get {
         concat(
-          path("field") {
-            complete(board_to_string_c())
+          path("new") {
+            new_game()
+            complete("Game reset successful")
           },
-          path("") {
-            sys.error("GET Route does not exist")
-          }
-        )
-      },
-      post {
-        concat(
           path("move" / Segment / Segment) { (x: String, y: String) =>
             move_c(x, y)
             complete("Move successful")

@@ -14,6 +14,7 @@ trait ControllerInterface extends Observable with Publisher{
     var field: Board
     val controllerRoute: Route
 
+    def new_game(): Board
     def game_state: GameState
     def board_to_string_c(): String
     def move_c(pos_now : String, pos_new : String) : Unit

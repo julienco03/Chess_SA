@@ -3,9 +3,6 @@ package model
 
 import scala.collection.immutable.VectorMap
 import com.google.inject.Inject
-
-import akka.http.scaladsl.server.Directives.*
-import akka.http.scaladsl.server.Route
 import play.api.libs.json.{JsObject, Json}
 
  /** empty game board
@@ -170,23 +167,6 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
 
         return top_row() + first_last_row(8) + cell_array(0) + "| 1\n" + border_row() + cell_array(1) + "| 2\n" + border_row() + cell_array(2) + "| 3\n" + border_row() + cell_array(3) + "| 4\n" + border_row() + cell_array(4) + "| 5\n" + border_row() + cell_array(5) + "| 6\n" + border_row() + cell_array(6) + "| 7\n" + border_row() + cell_array(7) + "| 8\n" + first_last_row(8, "\\", "/")
     }
-
-    override def toJson: JsObject = {
-        Json.obj(
-            "board" ->
-                board_to_string()
-        )
-    }
-
-    override val boardRoute: Route = concat(
-      get {
-        concat(
-          path("") {
-            complete(board_to_string())
-          }
-        )
-      }
-    )
 }
 
 object Board {

@@ -90,8 +90,8 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
 
   override def toJson: JsObject = {
     Json.obj(
-      "controller" ->
-        this.field.toJson
+      "board" ->
+        board_to_string_c()
     )
   }
 
@@ -121,6 +121,9 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
           path("load") {
             load
             complete("Load successful")
+          },
+          path("board") {
+            complete(board_to_string_c())
           },
           path("") {
             sys.error("POST Route does not exist")

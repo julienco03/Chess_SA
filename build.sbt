@@ -54,7 +54,6 @@ lazy val logic = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
-  .dependsOn(utils)
 
 lazy val persistence = project
   .in(file("persistence"))
@@ -81,7 +80,7 @@ lazy val ui = project
       commonSettings
     )
   .enablePlugins(CoverallsPlugin)
-  .dependsOn(controller, logic, utils)
+  .dependsOn(controller, utils)
 
 lazy val utils = project
   .in(file("utils"))

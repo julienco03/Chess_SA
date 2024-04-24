@@ -32,7 +32,7 @@ case class Rest(controller: ControllerInterface) extends Observer {
         <li><a href="/chess/redo">GET           ->     chess/redo</a></li>
         <li><a href="/chess/load">GET           ->     chess/load</a></li>
         <li><a href="/chess/save">GET           ->     chess/save</a></li>
-        <li><a href="/board/">GET           ->     board/</a></li>
+        <li><a href="/chess/board">GET           ->     chess/board</a></li>
         <li><a href="/exit">GET           ->     exit</a></li>
       </ul>
       <br>
@@ -61,11 +61,6 @@ case class Rest(controller: ControllerInterface) extends Observer {
     exitRoute,
     pathPrefix("chess") {
       this.controller.controllerRoute
-    },
-    pathPrefix("board") {
-      concat(
-        this.controller.field.boardRoute
-      )
     }
   )
 

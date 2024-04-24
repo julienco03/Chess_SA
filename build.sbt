@@ -1,6 +1,6 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-val scala3Version = "3.2.2-RC1-bin-20221101-d84007c-NIGHTLY" // This version is needed on MacOS with Apple Silicon Chip
+val scala3Version = "3.3.3"
 
 lazy val commonDependencies = Seq(
   "org.scalameta" %% "munit" % "0.7.29" % Test,
@@ -8,10 +8,17 @@ lazy val commonDependencies = Seq(
   "org.scalatest" %% "scalatest" % "3.2.10" % "test",
   "org.scalafx" %% "scalafx" % "18.0.1-R28",
   "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
-  "com.google.inject" % "guice" % "5.1.0",
   "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
+  "com.google.inject" % "guice" % "5.1.0",
   ("net.codingwell" %% "scala-guice" % "5.1.0").cross(CrossVersion.for3Use2_13),
-  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
+  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13),
+  "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
+  "com.typesafe.akka" %% "akka-stream" % "2.8.5",
+  "com.typesafe.akka" %% "akka-http" % "10.5.3",
+  "org.apache.cassandra" % "cassandra-all" % "4.1.4" excludeAll(
+    ExclusionRule(organization = "org.slf4j", name = "slf4j-log4j12"),
+    ExclusionRule(organization = "log4j", name = "log4j")
+  )
 )
 
 lazy val commonSettings = Seq(
@@ -27,8 +34,8 @@ lazy val root = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
-  .aggregate(controller, logic, persistence, ui, utils)
-  .dependsOn(controller, logic, persistence, ui, utils)
+  .aggregate(controller, logic, persistence, rest, ui, utils)
+  .dependsOn(controller, logic, persistence, rest, ui, utils)
 
 lazy val controller = project
   .in(file("controller"))
@@ -56,6 +63,15 @@ lazy val persistence = project
     )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic)
+
+lazy val rest = project
+  .in(file("rest"))
+  .settings(
+      name := "rest",
+      commonSettings
+    )
+  .enablePlugins(CoverallsPlugin)
+  .dependsOn(controller, utils)
 
 lazy val ui = project
   .in(file("ui"))

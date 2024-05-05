@@ -16,3 +16,4 @@ lazy val ui = project
   .settings(
     libraryDependencies ++= commonDependencies
   )
+  .dependsOn(controller)

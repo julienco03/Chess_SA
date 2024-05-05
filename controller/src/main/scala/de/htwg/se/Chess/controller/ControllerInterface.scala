@@ -1,16 +1,16 @@
 package de.htwg.se.Chess
 package controller
 
-import akka.http.scaladsl.server.Route
-import utils.Observable
-import controller.controllerComponent.GameState._
+import controllerComponent.GameState._
 import model._
+import utils.Observable
 
+import akka.http.scaladsl.server.Route
 import scala.swing.event.Event
 import scala.swing.Publisher
 import play.api.libs.json.JsObject
 
-trait ControllerInterface extends Observable with Publisher{
+trait ControllerInterface extends Observable with Publisher {
     var field: Board
     val controllerRoute: Route
 

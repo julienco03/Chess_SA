@@ -1,7 +1,5 @@
 package de.htwg.se.Chess
 package persistence
-package fileIOComponent
-package FileIOjsonImpl
 
 import model.*
 import persistence.fileIOComponent.FileIOInterface

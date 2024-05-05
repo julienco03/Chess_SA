@@ -1,13 +1,8 @@
 #!/bin/bash
 
-MODULES=("controller" "logic" "persistence" "rest" "utils") # ui
-
-build_dockerfile() {
-    local module=$1
-    echo "Building Dockerfile in $module..."
-    docker build -t "$module"-image:latest $module
-}
+MODULES=("controller" "logic" "persistence" "rest" "ui" "utils")
 
 for module in "${MODULES[@]}"; do
-    build_dockerfile "$module"
+    docker build -t "$module"-image:latest $module
 done
+docker build -t src-image:latest .

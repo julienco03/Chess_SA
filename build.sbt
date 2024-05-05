@@ -1,7 +1,6 @@
-val scala3Version = "3.3.3"
+import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-val akkaVersion = "2.8.5"
-val akkaHttpVersion = "10.5.3"
+val scala3Version = "3.3.3"
 
 lazy val commonDependencies = Seq(
   "org.scalameta" %% "munit" % "0.7.29" % Test,
@@ -12,64 +11,81 @@ lazy val commonDependencies = Seq(
   "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
   "com.google.inject" % "guice" % "5.1.0",
   ("net.codingwell" %% "scala-guice" % "5.1.0").cross(CrossVersion.for3Use2_13),
-  ("com.typesafe.play" %% "play-json" % "2.10.4").cross(CrossVersion.for3Use2_13),
-  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
-  "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13),
+  "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
+  "com.typesafe.akka" %% "akka-stream" % "2.8.5",
+  "com.typesafe.akka" %% "akka-http" % "10.5.3",
+  "org.apache.cassandra" % "cassandra-all" % "4.1.4" excludeAll(
+    ExclusionRule(organization = "org.slf4j", name = "slf4j-log4j12"),
+    ExclusionRule(organization = "log4j", name = "log4j")
+  )
 )
 
-lazy val root = (project in file("."))
+lazy val commonSettings = Seq(
+  scalaVersion := scala3Version,
+  libraryDependencies ++= commonDependencies,
+)
+
+lazy val root = project
+  .in(file("."))
   .settings(
     name := "Chess",
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := scala3Version,
-    libraryDependencies ++= commonDependencies
+    commonSettings
   )
-  .dependsOn(controller, logic, persistence, rest, utils)
-  .aggregate(controller, logic, persistence, rest, utils)
+  .enablePlugins(CoverallsPlugin)
+  .aggregate(controller, logic, persistence, rest, ui, utils)
+  .dependsOn(controller, logic, persistence, rest, ui, utils)
 
-lazy val controller = (project in file("controller"))
-  .settings(
-      name := "controller",
-      version := "0.1.0-SNAPSHOT",
-      libraryDependencies ++= commonDependencies
-    )
+lazy val controller = project
+  .in(file("controller"))
   .dependsOn(logic, utils)
+  .settings(
+    name := "controller",
+    commonSettings
+  )
+  .enablePlugins(CoverallsPlugin)
+  .dependsOn(logic, persistence, utils)
 
-lazy val logic = (project in file("logic"))
+lazy val logic = project
+  .in(file("logic"))
   .settings(
     name := "logic",
-    version := "0.1.0-SNAPSHOT",
-    libraryDependencies ++= commonDependencies
+    commonSettings
   )
+  .enablePlugins(CoverallsPlugin)
 
-lazy val persistence = (project in file("persistence"))
+lazy val persistence = project
+  .in(file("persistence"))
   .settings(
-    name := "persistence",
-    version := "0.1.0-SNAPSHOT",
-    libraryDependencies ++= commonDependencies
-  )
-  .dependsOn(logic, utils)
+      name := "persistence",
+      commonSettings
+    )
+  .enablePlugins(CoverallsPlugin)
+  .dependsOn(logic)
 
-lazy val rest = (project in file("rest"))
+lazy val rest = project
+  .in(file("rest"))
   .settings(
-    name := "rest",
-    version := "0.1.0-SNAPSHOT",
-    libraryDependencies ++= commonDependencies
-  )
+      name := "rest",
+      commonSettings
+    )
+  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
-// lazy val ui = (project in file("ui"))
-//  .settings(
-//     name := "ui",
-//     version := "0.1.0-SNAPSHOT",
-//     libraryDependencies ++= commonDependencies
-//   )
-//   .dependsOn(controller, logic, utils)
+lazy val ui = project
+  .in(file("ui"))
+  .settings(
+      name := "ui",
+      commonSettings
+    )
+  .enablePlugins(CoverallsPlugin)
+  .dependsOn(controller, utils)
 
-lazy val utils = (project in file("utils"))
+lazy val utils = project
+  .in(file("utils"))
   .settings(
     name := "utils",
-    version := "0.1.0-SNAPSHOT",
-    libraryDependencies ++= commonDependencies
+    commonSettings
   )
+  .enablePlugins(CoverallsPlugin)

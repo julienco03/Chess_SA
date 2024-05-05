@@ -3,8 +3,8 @@ package de.htwg.se.Chess
 import controller.ControllerInterface
 import controller.controllerComponent.Controller
 import model.Board
-import persistence.fileIOComponent.FileIOInterface
-import persistence.fileIOComponent.FileIOjsonImpl.FileIO
+import persistence.fileIOComponent.*
+import persistence.fileIOComponent.FileIOjsonImpl.*
 
 import com.google.inject.AbstractModule
 import com.google.inject.TypeLiteral

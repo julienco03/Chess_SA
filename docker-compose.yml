@@ -1,0 +1,46 @@
+name: chess_sa
+version: 1.0
+
+services:
+  controller:
+    container_name: controller
+    image: controller-image:latest
+    network_mode: host
+    ports:
+      - 9000:9000
+
+  logic:
+    container_name: logic
+    image: logic-image:latest
+    network_mode: host
+    ports:
+      - 9001:9001
+
+  persistence:
+    container_name: persistence
+    image: persistence-image:latest
+    network_mode: host
+    ports:
+      - 9002:9002
+
+  rest:
+    container_name: rest
+    image: rest-image:latest
+    network_mode: host
+    ports:
+      - 9003:9003
+
+  # ui:
+  #   container_name: ui
+  #   image: ui-image:latest
+  #   network_mode: host
+  #   stdin_open: true
+  #   ports:
+  #     - 9004:9004
+
+  utils:
+    container_name: utils
+    image: utils-image:latest
+    network_mode: host
+    ports:
+      - 9005:9005

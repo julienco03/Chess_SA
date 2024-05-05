@@ -21,71 +21,35 @@ lazy val commonDependencies = Seq(
   )
 )
 
-lazy val commonSettings = Seq(
-  scalaVersion := scala3Version,
-  libraryDependencies ++= commonDependencies,
-)
-
 lazy val root = project
   .in(file("."))
   .settings(
     name := "Chess",
     version := "0.1.0-SNAPSHOT",
-    commonSettings
+    scalaVersion := scala3Version,
+    libraryDependencies ++= commonDependencies
   )
-  .enablePlugins(CoverallsPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
   .dependsOn(controller, logic, persistence, rest, ui, utils)
 
 lazy val controller = project
   .in(file("controller"))
-  .dependsOn(logic, utils)
-  .settings(
-    name := "controller",
-    commonSettings
-  )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(logic, persistence, utils)
 
 lazy val logic = project
   .in(file("logic"))
-  .settings(
-    name := "logic",
-    commonSettings
-  )
-  .enablePlugins(CoverallsPlugin)
 
 lazy val persistence = project
   .in(file("persistence"))
-  .settings(
-      name := "persistence",
-      commonSettings
-    )
-  .enablePlugins(CoverallsPlugin)
-  .dependsOn(logic)
+  .dependsOn(logic, utils)
 
 lazy val rest = project
   .in(file("rest"))
-  .settings(
-      name := "rest",
-      commonSettings
-    )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val ui = project
   .in(file("ui"))
-  .settings(
-      name := "ui",
-      commonSettings
-    )
-  .enablePlugins(CoverallsPlugin)
-  .dependsOn(controller, utils)
+  .dependsOn(controller, logic, utils)
 
 lazy val utils = project
   .in(file("utils"))
-  .settings(
-    name := "utils",
-    commonSettings
-  )
-  .enablePlugins(CoverallsPlugin)

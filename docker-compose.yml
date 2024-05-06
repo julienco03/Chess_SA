@@ -5,7 +5,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - chess-volume:/app/src
+      - chess-volume:/app/target/scala-3.3.3/classes/de/htwg/se/Chess
 
   controller:
     container_name: controller
@@ -13,7 +13,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - chess-volume:/app/controller
+      - chess-volume:/app/target/scala-3.3.3/classes/de/htwg/se/Chess/controller
 
   logic:
     container_name: logic

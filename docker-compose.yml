@@ -5,7 +5,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/src
 
   controller:
     container_name: controller
@@ -13,7 +13,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/controller
 
   logic:
     container_name: logic
@@ -21,7 +21,7 @@ services:
     ports:
       - 9001:9001
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/logic
 
   persistence:
     container_name: persistence
@@ -29,7 +29,7 @@ services:
     ports:
       - 9002:9002
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/persistence
 
   rest:
     container_name: rest
@@ -37,7 +37,7 @@ services:
     ports:
       - 9003:9003
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/rest
 
   ui:
     container_name: ui
@@ -45,7 +45,7 @@ services:
     ports:
       - 9004:9004
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/ui
 
   utils:
     container_name: utils
@@ -53,7 +53,7 @@ services:
     ports:
       - 9005:9005
     volumes:
-      - chess-volume:/app
+      - chess-volume:/app/utils
 
 volumes:
   chess-volume:

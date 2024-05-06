@@ -1,7 +1,9 @@
-FROM alpine
+FROM busybox
 
-WORKDIR /app
+WORKDIR /app/persistence
 
-COPY ./target /persistence
+COPY ./target /app/persistence
 
 EXPOSE 9002
+
+CMD tail -f /dev/null

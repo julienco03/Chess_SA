@@ -1,7 +1,9 @@
-FROM alpine
+FROM busybox
 
-WORKDIR /app
+WORKDIR /app/utils
 
-COPY . /app
+COPY ./target /app/utils
 
 EXPOSE 9005
+
+CMD tail -f /dev/null

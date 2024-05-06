@@ -64,5 +64,5 @@ case class Rest(controller: ControllerInterface) extends Observer {
     }
   )
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt("localhost", PORT).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt("host.docker.internal", PORT).bind(route)
 }

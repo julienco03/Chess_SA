@@ -1,59 +1,9 @@
 services:
-  src:
-    container_name: src
-    image: src-image
+  chess_sa:
+    container_name: chess_sa
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chess_sa-image
     ports:
-      - 8000:8000
-    volumes:
-      - chess-volume:/app/target/scala-3.3.3/classes/de/htwg/se/Chess
-
-  controller:
-    container_name: controller
-    image: controller-image
-    ports:
-      - 9000:9000
-    volumes:
-      - chess-volume:/app/target/scala-3.3.3/classes/de/htwg/se/Chess/controller
-
-  logic:
-    container_name: logic
-    image: logic-image
-    ports:
-      - 9001:9001
-    volumes:
-      - chess-volume:/app/logic
-
-  persistence:
-    container_name: persistence
-    image: persistence-image
-    ports:
-      - 9002:9002
-    volumes:
-      - chess-volume:/app/persistence
-
-  rest:
-    container_name: rest
-    image: rest-image
-    ports:
-      - 9003:9003
-    volumes:
-      - chess-volume:/app/rest
-
-  ui:
-    container_name: ui
-    image: ui-image
-    ports:
-      - 9004:9004
-    volumes:
-      - chess-volume:/app/ui
-
-  utils:
-    container_name: utils
-    image: utils-image
-    ports:
-      - 9005:9005
-    volumes:
-      - chess-volume:/app/utils
-
-volumes:
-  chess-volume:
+      - "8000:8000"

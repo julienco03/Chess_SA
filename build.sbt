@@ -1,6 +1,6 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-val scala3Version = "3.3.3"
+val scala3Version = "3.3.1"
 
 lazy val commonDependencies = Seq(
   "org.scalameta" %% "munit" % "0.7.29" % Test,

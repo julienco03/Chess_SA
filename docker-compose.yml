@@ -1,0 +1,63 @@
+services:
+  chess_sa:
+    container_name: chess_sa
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chess_sa-image
+    ports:
+      - 8000:8000
+
+  controller:
+    container_name: controller
+    build:
+      context: ./controller
+      dockerfile: Dockerfile
+    image: controller-image
+    ports:
+      - 9000:9000
+
+  logic:
+    container_name: logic
+    build:
+      context: ./logic
+      dockerfile: Dockerfile
+    image: logic-image
+    ports:
+      - 9001:9001
+
+  persistence:
+    container_name: persistence
+    build:
+      context: ./persistence
+      dockerfile: Dockerfile
+    image: persistence-image
+    ports:
+      - 9002:9002
+
+  rest:
+    container_name: rest
+    build:
+      context: ./rest
+      dockerfile: Dockerfile
+    image: rest-image
+    ports:
+      - 9003:9003
+
+  ui:
+    container_name: ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    image: ui-image
+    ports:
+      - 9004:9004
+
+  utils:
+    container_name: utils
+    build:
+      context: ./utils
+      dockerfile: Dockerfile
+    image: utils-image
+    ports:
+      - 9005:9005

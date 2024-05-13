@@ -18,7 +18,8 @@ case class Rest(controller: ControllerInterface) extends Observer {
   implicit val system: ActorSystem = ActorSystem()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  private val PORT = 8080
+  private val PORT = 8000
+  private val HOST = "0.0.0.0"
 
   val WELCOME_STRING =
     """
@@ -64,5 +65,5 @@ case class Rest(controller: ControllerInterface) extends Observer {
     }
   )
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt("localhost", PORT).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(HOST, PORT).bind(route)
 }

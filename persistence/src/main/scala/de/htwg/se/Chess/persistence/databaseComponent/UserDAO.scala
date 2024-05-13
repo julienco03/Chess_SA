@@ -27,4 +27,7 @@ trait UserDao(config: Config) {
 
 object UserDao {
     val maxNameLength = 50
+<<<<<<< HEAD
+}
+=======
 }

@@ -24,4 +24,7 @@ trait SessionDao(config: Config) {
     def deleteSession(sessionid: Int): Future[Try[Board]]
 
     def close(): Unit
+<<<<<<< HEAD
+}
+=======
 }

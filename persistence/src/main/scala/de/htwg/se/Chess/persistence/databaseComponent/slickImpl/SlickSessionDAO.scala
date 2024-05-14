@@ -3,54 +3,38 @@ package persistence
 package databaseComponent
 package slickImpl
 
+import model.Board
+import persistence.databaseComponent.{Session, SessionDao}
+
 import slick.jdbc.MySQLProfile.api._
+import scala.concurrent.{Future, ExecutionContext}
 
-case class Session(id: Long, name: String, userId: Long)
-
-trait SessionDao {
-  def getGameById(id: Long): Option[Game]
-  def createGame(game: Game): Long
-  def updateGame(game: Game): Unit
-  def deleteGame(id: Long): Unit
-  def close(): Unit
-  def makeMove(gameId: Long, move: Move): Unit
-}
-
-class SlickSessionDao(db: Database) extends SessionDao {
+class SlickSessionDao(db: Database)(implicit ec: ExecutionContext) extends SessionDao {
   class Sessions(tag: Tag) extends Table[Session](tag, "sessions") {
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def name = column[String]("name")
-    def userId = column[Long]("user_id")
-    def * = (id, name, userId) <> (Session.tupled, Session.unapply)
+    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def board = column[String]("board")
+    def * = (id, board).mapTo[Session]
   }
-  
-  val sessions = TableQuery[Session]
-  
-  override def getGameById(id: Long): Option[Game] = {
-    val query = games.filter(_.id === id).result.headOption
+
+  private val sessions = TableQuery[Sessions]
+
+  override def getSessionById(id: Int): Future[Option[Session]] = {
+    val query = sessions.filter(_.id === id).result.headOption
     db.run(query)
   }
 
-  override def createGame(game: Game): Long = {
-    val query = (games returning games.map(_.id)) += game
+  override def createSession(session: Session): Future[Int] = {
+    val query = (sessions returning sessions.map(_.id)) += session
+    db.run(query).map(_.toInt)
+  }
+
+  override def updateSession(session: Session): Future[Int] = {
+    val query = sessions.filter(_.id === session.id.toInt).update(session)
     db.run(query)
   }
 
-  override def updateGame(game: Game): Unit = {
-    val query = games.filter(_.id === game.id).update(game)
+  override def deleteSession(id: Int): Future[Int] = {
+    val query = sessions.filter(_.id === id).delete
     db.run(query)
   }
-
-  override def deleteGame(id: Long): Unit = {
-    val query = games.filter(_.id === id).delete
-    db.run(query)
-  }
-
-  override def close(): Unit = db.close
-
-  override def makeMove(gameId: Long, move: Move): Unit = {
-    val query = moves += (gameId, move)
-    db.run(query)
-  }
-
 }

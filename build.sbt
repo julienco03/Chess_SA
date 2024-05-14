@@ -18,7 +18,10 @@ lazy val commonDependencies = Seq(
   "org.apache.cassandra" % "cassandra-all" % "4.1.4" excludeAll(
     ExclusionRule(organization = "org.slf4j", name = "slf4j-log4j12"),
     ExclusionRule(organization = "log4j", name = "log4j")
-  )
+  ),
+  "com.typesafe.slick" %% "slick" % "3.5.1",
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.5.1",
+  "mysql" % "mysql-connector-java" % "8.0.28",
 )
 
 lazy val commonSettings = Seq(

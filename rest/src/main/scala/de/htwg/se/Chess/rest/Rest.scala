@@ -9,6 +9,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
+import com.typesafe.config.ConfigFactory
 import scala.concurrent.{ExecutionContext, Future}
 
 case class Rest(controller: ControllerInterface) extends Observer {
@@ -18,8 +19,9 @@ case class Rest(controller: ControllerInterface) extends Observer {
   implicit val system: ActorSystem = ActorSystem()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  private val PORT = 8000
-  private val HOST = "0.0.0.0"
+  val config = ConfigFactory.load()
+  val serverPort = config.getInt("server.port")
+  val serverHost = config.getString("server.host")
 
   val WELCOME_STRING =
     """
@@ -65,5 +67,5 @@ case class Rest(controller: ControllerInterface) extends Observer {
     }
   )
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(HOST, PORT).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(serverHost, serverPort).bind(route)
 }

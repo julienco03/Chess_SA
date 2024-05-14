@@ -58,7 +58,7 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
 
     def check_move(board: VectorMap[String, String], pos_now: String, pos_new: String): Boolean = {
         // Check if Position now is empty
-        if (empty_field(pos_now))
+        if (empty_board(pos_now))
             return false
 
         // Check if Move from Figure is allowed on an empty board
@@ -87,7 +87,7 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
     def different_player(pos_one: String, pos_two: String): Boolean =
         get_player(pos_one) != get_player(pos_two) && get_player(pos_one) != "Invalid" && get_player(pos_two) != "Invalid"
 
-    def empty_field(pos: String): Boolean =
+    def empty_board(pos: String): Boolean =
         val pos_tmp = match_pattern(board.get(pos))
         pos_tmp != "Invalid" && pos_tmp == "  "
 
@@ -142,7 +142,7 @@ case class Board @Inject() (val board: VectorMap[String, String]) extends BoardI
         different_player(pos_now, pos_new) && x_or_y(pos_now, pos_new)
 
     def pawn(pos_now: String, pos_new: String): Boolean =
-        (get_player(pos_now) == "1" || get_player(pos_now) == "2") && (y_diff(pos_now, pos_new) == 1 || (y_diff(pos_now, pos_new) == 2)) && x_or_y(pos_now, pos_new) && forward_move(pos_now, pos_new) || x_diff(pos_now, pos_new) == 1 && y_diff(pos_now, pos_new) == 1 && (different_player(pos_now, pos_new) && get_player(pos_now) == "1" && forward_move(pos_now, pos_new) && !empty_field(pos_new) || different_player(pos_now, pos_new) && get_player(pos_now) == "2" && forward_move(pos_now, pos_new) && !empty_field(pos_new))
+        (get_player(pos_now) == "1" || get_player(pos_now) == "2") && (y_diff(pos_now, pos_new) == 1 || (y_diff(pos_now, pos_new) == 2)) && x_or_y(pos_now, pos_new) && forward_move(pos_now, pos_new) || x_diff(pos_now, pos_new) == 1 && y_diff(pos_now, pos_new) == 1 && (different_player(pos_now, pos_new) && get_player(pos_now) == "1" && forward_move(pos_now, pos_new) && !empty_board(pos_new) || different_player(pos_now, pos_new) && get_player(pos_now) == "2" && forward_move(pos_now, pos_new) && !empty_board(pos_new))
 
     val eol = sys.props("line.separator")
 

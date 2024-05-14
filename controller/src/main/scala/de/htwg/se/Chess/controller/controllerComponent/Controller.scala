@@ -6,7 +6,7 @@ import controller.CellChanged
 import controller.ControllerInterface
 import controller.controllerComponent.GameState._
 import model._
-import persistence.fileIOComponent.FileIOInterface
+import persistence.PersistenceInterface
 import utils.Observable
 
 import com.google.inject.name.Names
@@ -16,22 +16,22 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import play.api.libs.json.{JsObject, Json}
 
-case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) extends ControllerInterface:
+case class Controller @Inject() (var board: Board, var persistence: PersistenceInterface) extends ControllerInterface:
 
   var game_state: GameState = NO_WINNER_YET
   private val history_manager = new HistoryManager
   val playersystem:PlayerSystem = new PlayerSystem()
 
   def new_game(): Board =
-    field = Board()
+    board = Board()
     notifyObservers
     publish(new CellChanged)
-    field
+    board
 
-  def board_to_string_c() : String = field.board_to_string()
+  def board_to_string_c() : String = board.board_to_string()
 
   def move_c(pos_now : String, pos_new : String) : Unit =
-    field = field.move(pos_now, pos_new)
+    board = board.move(pos_now, pos_new)
     change_player()
     check_winner()
     notifyObservers
@@ -42,7 +42,7 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
   }
 
   def get_player_c(pos_now: String): String =
-    field.get_player(pos_now)
+    board.get_player(pos_now)
 
   def change_player(): Unit =
     playersystem.changeState()
@@ -54,20 +54,20 @@ case class Controller @Inject() (var field: Board, var fileIO: FileIOInterface) 
         "1"
 
   def check_winner(): Unit = {
-    val success = field.game_finished(field.board)
+    val success = board.game_finished(board.board)
     if (success == 1) game_state = PLAYER1
     else if (success == 2) game_state = PLAYER2
       else game_state = NO_WINNER_YET
   }
 
   def load: Board = {
-    field = fileIO.load()
+    board = persistence.loadGame()
     notifyObservers
-    field
+    board
   }
 
   def save: Unit = {
-    fileIO.save(field)
+    persistence.saveGame(board)
   }
 
   def undo(): Unit = {

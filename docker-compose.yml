@@ -1,63 +1,31 @@
 services:
-  chess_sa:
-    container_name: chess_sa
+  app:
+    container_name: app-container
     build:
       context: .
       dockerfile: Dockerfile
-    image: chess_sa-image
+    image: app-image
+    environment:
+      - DATABASE_URL: jdbc:mysql://db:3306/chess_db
+      - DATABASE_USER: chess_user
+      - DATABASE_PASSWORD: chess_password
     ports:
-      - 8000:8000
+      - "8000:8000"
+    depends_on:
+      - db
 
-  controller:
-    container_name: controller
-    build:
-      context: ./controller
-      dockerfile: Dockerfile
-    image: controller-image
+  db:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: chess_db
+      MYSQL_USER: chess_user
+      MYSQL_PASSWORD: chess_password
     ports:
-      - 9000:9000
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
 
-  logic:
-    container_name: logic
-    build:
-      context: ./logic
-      dockerfile: Dockerfile
-    image: logic-image
-    ports:
-      - 9001:9001
-
-  persistence:
-    container_name: persistence
-    build:
-      context: ./persistence
-      dockerfile: Dockerfile
-    image: persistence-image
-    ports:
-      - 9002:9002
-
-  rest:
-    container_name: rest
-    build:
-      context: ./rest
-      dockerfile: Dockerfile
-    image: rest-image
-    ports:
-      - 9003:9003
-
-  ui:
-    container_name: ui
-    build:
-      context: ./ui
-      dockerfile: Dockerfile
-    image: ui-image
-    ports:
-      - 9004:9004
-
-  utils:
-    container_name: utils
-    build:
-      context: ./utils
-      dockerfile: Dockerfile
-    image: utils-image
-    ports:
-      - 9005:9005
+volumes:
+  mysql_data:

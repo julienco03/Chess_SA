@@ -2,6 +2,8 @@ import org.scoverage.coveralls.Imports.CoverallsKeys._
 
 val scala3Version = "3.3.1"
 
+val slickVersion = "3.5.1"
+
 lazy val commonDependencies = Seq(
   "org.scalameta" %% "munit" % "0.7.29" % Test,
   "org.scalactic" %% "scalactic" % "3.2.10",
@@ -15,8 +17,9 @@ lazy val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
   "com.typesafe.akka" %% "akka-stream" % "2.8.5",
   "com.typesafe.akka" %% "akka-http" % "10.5.3",
-  "com.typesafe.slick" %% "slick" % "3.5.1",
-  "com.typesafe.slick" %% "slick-hikaricp" % "3.5.1",
+  "com.typesafe.slick" %% "slick" % slickVersion,
+  "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+  "com.typesafe.slick" %% "slick-codegen" % slickVersion,
   "mysql" % "mysql-connector-java" % "8.0.28",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
     "ch.qos.logback" % "logback-classic" % "1.5.6",

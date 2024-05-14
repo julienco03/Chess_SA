@@ -44,3 +44,5 @@ Notizen.txt
 # Chess board data
 *.json
 *.xml
+
+bin

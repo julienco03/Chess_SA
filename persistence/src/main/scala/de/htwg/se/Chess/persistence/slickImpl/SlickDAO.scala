@@ -17,6 +17,7 @@ class SlickDao extends PersistenceInterface {
 
     val config = ConfigFactory.load()
     val db = Database.forConfig("slick.dbs.default", config)
+
     val boards: TableQuery[Boards] = TableQuery[Boards]
 
     private def createTablesIfNotExist(): Unit = {

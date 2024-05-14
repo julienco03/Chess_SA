@@ -15,13 +15,12 @@ lazy val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
   "com.typesafe.akka" %% "akka-stream" % "2.8.5",
   "com.typesafe.akka" %% "akka-http" % "10.5.3",
-  "org.apache.cassandra" % "cassandra-all" % "4.1.4" excludeAll(
-    ExclusionRule(organization = "org.slf4j", name = "slf4j-log4j12"),
-    ExclusionRule(organization = "log4j", name = "log4j")
-  ),
   "com.typesafe.slick" %% "slick" % "3.5.1",
-    "com.typesafe.slick" %% "slick-hikaricp" % "3.5.1",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.5.1",
   "mysql" % "mysql-connector-java" % "8.0.28",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
+    "ch.qos.logback" % "logback-classic" % "1.5.6",
+    "org.slf4j" % "slf4j-api" % "2.0.12"
 )
 
 lazy val commonSettings = Seq(
@@ -32,7 +31,7 @@ lazy val commonSettings = Seq(
 lazy val root = project
   .in(file("."))
   .settings(
-    name := "Chess",
+    name := "chess_sa",
     version := "0.1.0-SNAPSHOT",
     commonSettings
   )

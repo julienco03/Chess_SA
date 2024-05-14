@@ -4,11 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: app-image
     environment:
-      - DATABASE_URL: jdbc:mysql://db:3306/chess_db
-      - DATABASE_USER: chess_user
-      - DATABASE_PASSWORD: chess_password
+      - DATABASE_URL=jdbc:mysql://db:3306/chess_db
+      - DATABASE_USER=chess_user
+      - DATABASE_PASSWORD=chess_password
     ports:
       - "8000:8000"
     depends_on:
@@ -18,10 +17,10 @@ services:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: chess_db
-      MYSQL_USER: chess_user
-      MYSQL_PASSWORD: chess_password
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=chess_db
+      - MYSQL_USER=chess_user
+      - MYSQL_PASSWORD=chess_password
     ports:
       - "3306:3306"
     volumes:

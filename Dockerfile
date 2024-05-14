@@ -5,6 +5,4 @@ EXPOSE 8000
 WORKDIR /chess_sa
 COPY . /chess_sa
 
-RUN sbt update clean compile
-
 CMD sbt run

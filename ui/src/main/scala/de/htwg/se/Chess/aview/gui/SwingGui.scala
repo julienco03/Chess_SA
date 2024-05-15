@@ -69,9 +69,9 @@ class SwingGUI(controller: ControllerInterface) extends Frame with Observer:
 
     class CellPanel() extends GridPanel(8, 8):
         border = EmptyBorder(20,20,20,20)
-        printField
-        def printField =
-            controller.field.board.map(x =>
+        printBoard
+        def printBoard =
+            controller.board.board.map(x =>
                 contents += new CellButton(x._1, x._2))
 
     class CellButton(pos: String, figure: String) extends Button(figure):

@@ -1,7 +1,5 @@
 package de.htwg.se.Chess
 
-import aview.tui
-import aview.SwingGUI
 import controller.ControllerInterface
 import rest.Rest
 

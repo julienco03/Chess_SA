@@ -11,7 +11,7 @@ import scala.swing.Publisher
 import play.api.libs.json.JsObject
 
 trait ControllerInterface extends Observable with Publisher {
-    var field: Board
+    var board: Board
     val controllerRoute: Route
 
     def new_game(): Board

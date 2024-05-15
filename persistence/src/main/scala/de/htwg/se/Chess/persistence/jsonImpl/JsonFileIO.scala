@@ -6,6 +6,7 @@ import model._
 import persistence.PersistenceInterface
 
 import java.io._
+import java.nio.file.{Files, Paths, StandardOpenOption}
 import scala.io.Source
 import scala.collection.immutable.VectorMap
 import scala.languageFeature.postfixOps
@@ -13,8 +14,21 @@ import play.api.libs.json._
 
 class JsonFileIO extends PersistenceInterface {
 
+  private val jsonFilePath: String = "board.json"
+
+  def createFileIfNotExists(): Unit = {
+    if (!Files.exists(Paths.get(jsonFilePath))) {
+      val pw = new PrintWriter(new File(jsonFilePath))
+      val emptyBoard: Board = Board()
+      pw.write(vectorMapToJson(emptyBoard))
+      pw.close()
+    }
+  }
+
   override def loadGame(): Board = {
-    val source: String = Source.fromFile("board.json").getLines.mkString
+    createFileIfNotExists()
+
+    val source: String = Source.fromFile(jsonFilePath).getLines.mkString
     val json: JsValue = Json.parse(source)
 
     def updateBoard(index: Int, board: VectorMap[String, String]): VectorMap[String, String] = {
@@ -33,10 +47,13 @@ class JsonFileIO extends PersistenceInterface {
     Board(finalBoard)
   }
 
-  override def saveGame(board: Board): Unit =
-    val pw = new PrintWriter(new File("board.json"))
+  override def saveGame(board: Board): Unit = {
+    createFileIfNotExists()
+
+    val pw = new PrintWriter(new File(jsonFilePath))
     pw.write(vectorMapToJson(board))
-    pw.close
+    pw.close()
+  }
 
   def vectorMapToJson(board: Board): String = {
     val tmp: Seq[(String, String)] = board.board.toSeq // Convert to Seq of tuples

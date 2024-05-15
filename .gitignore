@@ -39,3 +39,7 @@ null/
 .scala_dependencies
 .cache-main
 .coveralls.yml
+
+# fileIO data
+board.json
+board.xml

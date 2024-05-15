@@ -6,6 +6,7 @@ import model._
 import persistence.PersistenceInterface
 
 import java.io._
+import java.nio.file.{Files, Paths, StandardOpenOption}
 import scala.io.Source
 import scala.collection.immutable.VectorMap
 import scala.languageFeature.postfixOps
@@ -14,8 +15,21 @@ import scala.xml._
 
 class XmlFileIO extends PersistenceInterface {
 
+  private val xmlFilePath: String = "board.xml"
+
+  def createFileIfNotExists(): Unit = {
+    if (!Files.exists(Paths.get(xmlFilePath))) {
+      val pw = new PrintWriter(new File(xmlFilePath))
+      val emptyBoard: Board = Board()
+      pw.write(vectorMapToXml(emptyBoard).toString())
+      pw.close()
+    }
+  }
+
   override def loadGame(): Board = {
-    val source = scala.xml.XML.loadFile("board.xml")
+    createFileIfNotExists()
+
+    val source = scala.xml.XML.loadFile(xmlFilePath)
 
     def updateBoard(index: Int, board: VectorMap[String, String]): VectorMap[String, String] = {
       if (index < 8 * 8) {
@@ -39,7 +53,9 @@ class XmlFileIO extends PersistenceInterface {
   }
 
   override def saveGame(board: Board): Unit =
-    val pw = new PrintWriter(new File("board.xml"))
+    createFileIfNotExists()
+
+    val pw = new PrintWriter(new File(xmlFilePath))
     pw.write(vectorMapToXml(board).toString())
     pw.close()
 

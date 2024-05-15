@@ -1,9 +1,21 @@
-.bsp
-.github
-bin
-target
-ui
-.gitignore
-chess_banner.jpg
-LICENSE.md
-README.md
+# Ignore everything first
+**
+
+# Include only specific directories and files
+!controller/
+!logic/
+!persistence/
+!project/
+!rest/
+!src/
+!utils/
+!build.sbt
+!board.json
+!board.xml
+
+# Ignore Git and IDE related files
+.git/
+.github/
+.idea/
+*.iml
+.bsp/

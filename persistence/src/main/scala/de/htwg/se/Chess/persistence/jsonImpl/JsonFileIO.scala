@@ -9,8 +9,6 @@ import java.io._
 import scala.io.Source
 import scala.collection.immutable.VectorMap
 import scala.languageFeature.postfixOps
-import scalafx.stage.FileChooser
-import scalafx.stage.FileChooser.ExtensionFilter
 import play.api.libs.json._
 
 class JsonFileIO extends PersistenceInterface {
@@ -35,9 +33,9 @@ class JsonFileIO extends PersistenceInterface {
     Board(finalBoard)
   }
 
-  override def saveGame(game: Board): Unit =
+  override def saveGame(board: Board): Unit =
     val pw = new PrintWriter(new File("board.json"))
-    pw.write(vectorMapToJson(game))
+    pw.write(vectorMapToJson(board))
     pw.close
 
   def vectorMapToJson(board: Board): String = {

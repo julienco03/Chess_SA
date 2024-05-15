@@ -34,15 +34,8 @@ null/
 # mac
 .DS_Store
 
-# other?
+# other
 .history
 .scala_dependencies
 .cache-main
-Notizen.txt
 .coveralls.yml
-
-# Chess board data
-*.json
-*.xml
-
-bin

@@ -70,4 +70,8 @@ class XmlFileIO extends PersistenceInterface {
     val entriesXml = convertEntriesToXml(board.board.toVector)
     <game>{entriesXml}</game>
   }
+  
+  override def updateGame(board: Board): Unit = ???
+  
+  override def deleteGame(): Unit = ???
 }

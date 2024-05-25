@@ -4,6 +4,8 @@ package persistence
 import model.Board
 
 trait PersistenceInterface {
-    def saveGame(board: Board) : Unit
-    def loadGame() : Board
+    def loadGame() : Board              // GET
+    def saveGame(board: Board) : Unit   // POST
+    def updateGame(board: Board): Unit  // PUT
+    def deleteGame(): Unit              // DELETE
 }

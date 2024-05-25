@@ -54,7 +54,7 @@ lazy val mysqlDependencies = Seq(
 )
 
 lazy val mongoDependencies = Seq(
-  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
+  ("org.mongodb.scala" %% "mongo-scala-driver" % "4.9.0").cross(CrossVersion.for3Use2_13),
 )
 
 lazy val commonSettings = Seq(

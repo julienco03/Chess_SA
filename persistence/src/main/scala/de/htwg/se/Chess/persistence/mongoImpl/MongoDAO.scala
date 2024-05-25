@@ -6,7 +6,7 @@ import model.Board
 import persistence.serializer.BoardSerializer
 
 import org.mongodb.scala._
-import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Filters
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.{DeleteResult, InsertOneResult, UpdateResult}
 import play.api.libs.json._
@@ -38,5 +38,20 @@ class MongoDao extends PersistenceInterface {
     
     val future: Future[InsertOneResult] = boardCollection.insertOne(document).toFuture()
     Await.result(future, 10.seconds)
+  }
+  
+  override def updateGame(board: Board): Unit = {
+    val serializedBoard = BoardSerializer.serializeBoard(board)
+    val updateFilter = Filters.exists("board")
+    val updateAction = boardCollection.replaceOne(updateFilter, Document("board" -> serializedBoard))
+    val updateFuture = updateAction.toFuture()
+    Await.result(updateFuture, 10.seconds)
+  }
+
+  override def deleteGame(): Unit = {
+    val deleteFilter = Filters.exists("board")
+    val deleteAction = boardCollection.deleteOne(deleteFilter)
+    val deleteFuture = deleteAction.toFuture()
+    Await.result(deleteFuture, 10.seconds)
   }
 }

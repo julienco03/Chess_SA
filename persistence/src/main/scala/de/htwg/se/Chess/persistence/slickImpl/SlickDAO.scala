@@ -43,4 +43,17 @@ class SlickDao extends PersistenceInterface {
         val insertFuture = db.run(insertAction)
         Await.result(insertFuture, 10.seconds)
     }
+    
+    override def updateGame(board: Board): Unit = {
+        val serializedBoard = BoardSerializer.serializeBoard(board)
+        val updateAction = boards.insertOrUpdate((0, serializedBoard))
+        val updateFuture = db.run(updateAction)
+        Await.result(updateFuture, 10.seconds)
+    }
+
+    override def deleteGame(): Unit = {
+        val deleteAction = boards.delete
+        val deleteFuture = db.run(deleteAction)
+        Await.result(deleteFuture, 10.seconds)
+    }
 }

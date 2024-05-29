@@ -4,6 +4,7 @@ package slickImpl
 
 import model.Board
 import persistence.slickImpl.table.Boards
+import persistence.serializer.BoardSerializer
 
 import com.typesafe.config.ConfigFactory
 import concurrent.ExecutionContext.Implicits.global
@@ -19,6 +20,8 @@ class SlickDao extends PersistenceInterface {
     val db = Database.forConfig("slick.dbs.default", config)
 
     val boards: TableQuery[Boards] = TableQuery[Boards]
+    
+    createTablesIfNotExist()
 
     private def createTablesIfNotExist(): Unit = {
         val setup = DBIO.seq((boards.schema).createIfNotExists)
@@ -26,35 +29,31 @@ class SlickDao extends PersistenceInterface {
         Await.result(setupFuture, 10.seconds)
     }
 
-    override def saveGame(board: Board): Unit = {
-        createTablesIfNotExist()
-        val serializedBoard = serializeBoard(board)
-        val insertAction = boards += (0, serializedBoard)
-        val insertFuture = db.run(insertAction)
-        Await.result(insertFuture, 10.seconds)
-    }
-
     override def loadGame(): Board = {
         val queryAction = boards.result.headOption
         val queryFuture = db.run(queryAction)
         val maybeSerializedBoard: Option[(Int, String)] = Await.result(queryFuture, 10.seconds)
-        val maybeBoard = maybeSerializedBoard.map(row => deserializeBoard(row._2))
+        val maybeBoard = maybeSerializedBoard.map(row => BoardSerializer.deserializeBoard(row._2))
         maybeBoard.getOrElse(Board())
     }
 
-    private def serializeBoard(board: Board): String = {
-        board.board.map { case (key, value) => s"$key:$value" }.mkString(";")
+    override def saveGame(board: Board): Unit = {
+        val serializedBoard = BoardSerializer.serializeBoard(board)
+        val insertAction = boards += (0, serializedBoard)
+        val insertFuture = db.run(insertAction)
+        Await.result(insertFuture, 10.seconds)
+    }
+    
+    override def updateGame(board: Board): Unit = {
+        val serializedBoard = BoardSerializer.serializeBoard(board)
+        val updateAction = boards.insertOrUpdate((0, serializedBoard))
+        val updateFuture = db.run(updateAction)
+        Await.result(updateFuture, 10.seconds)
     }
 
-    private def deserializeBoard(serialized: String): Board = {
-        if (serialized.isEmpty) Board(VectorMap.empty)
-        else {
-            val keyValuePairs = serialized.split(";").map { entry =>
-                val Array(key, value) = entry.split(":")
-                key -> value
-            }
-            val boardMap = VectorMap(keyValuePairs: _*)
-            Board(boardMap)
-        }
+    override def deleteGame(): Unit = {
+        val deleteAction = boards.delete
+        val deleteFuture = db.run(deleteAction)
+        Await.result(deleteFuture, 10.seconds)
     }
 }

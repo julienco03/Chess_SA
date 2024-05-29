@@ -7,6 +7,7 @@ import persistence._
 import persistence.xmlImpl.XmlFileIO
 import persistence.jsonImpl.JsonFileIO
 import persistence.slickImpl.SlickDao
+import persistence.mongoImpl.MongoDao
 
 import com.google.inject.AbstractModule
 import com.google.inject.TypeLiteral
@@ -23,7 +24,11 @@ class ChessModule extends AbstractModule {
         // bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = JsonFileIO()))
 
         /* Slick - MySQL */
-        bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[slickImpl.SlickDao])
-        bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = SlickDao()))
+        // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[slickImpl.SlickDao])
+        // bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = SlickDao()))
+        
+        /* MongoDB */
+        bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[mongoImpl.MongoDao])
+        bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = MongoDao()))
     }
 }

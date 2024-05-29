@@ -78,4 +78,8 @@ class JsonFileIO extends PersistenceInterface {
     )
     Json.stringify(jsonData)
   }
+  
+  override def updateGame(board: Board): Unit = ???
+  
+  override def deleteGame(): Unit = ???
 }

@@ -39,26 +39,27 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   // Define the Source, Flow, and Sink
   val (queue, source) = Source
-    .queue[(String, String)](10, OverflowStrategy.dropNew)
-    .preMaterialize()
+    .queue[(String, String)](
+      bufferSize = 10,
+      overflowStrategy = OverflowStrategy.backpressure
+    )
+    .preMaterialize()(materializer)
 
-  val flow: Flow[(String, String), (String, String), NotUsed] =
-    Flow[(String, String)].mapAsync(parallelism = 4) { case (pos1, pos2) =>
-      apiClient.processMove(pos1, pos2)
-      Future.successful((pos1, pos2))
-    }
+  val flow = Flow[(String, String)].map { (oldPos, newPos) =>
+    (oldPos, newPos)
+  }
 
   val sink: Sink[(String, String), Future[Done]] =
-    Sink.foreach[(String, String)] { case (p1, p2) =>
+    Sink.foreach[(String, String)] { case (oldPos, newPos) =>
+      apiClient.processMove(oldPos, newPos)
       selection_system.changeState()
       pos1 = ""
       pos2 = ""
-      update
     }
 
   // Connect the Source, Flow, and Sink
   val runnableGraph = source.via(flow).toMat(sink)(Keep.right)
-  val materialized = runnableGraph.run()
+  val materialized = runnableGraph.run()(materializer)
 
   title = "Chess Game"
   preferredSize = new Dimension(800, 800)
@@ -72,9 +73,11 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
       contents += new Separator
       contents += new MenuItem(Action("Undo") {
         apiClient.undoMove()
+        update
       })
       contents += new MenuItem(Action("Redo") {
         apiClient.redoMove()
+        update
       })
       contents += new Separator
       contents += new MenuItem(Action("Save") {

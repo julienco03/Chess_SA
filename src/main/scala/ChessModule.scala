@@ -14,21 +14,33 @@ import com.google.inject.TypeLiteral
 import net.codingwell.scalaguice.ScalaModule
 
 class ChessModule extends AbstractModule {
-    override def configure(): Unit = {
-        /* XML */
-        // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[xmlImpl.XmlFileIO])
-        // bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = XmlFileIO()))
+  override def configure(): Unit = {
+    /* XML */
+    // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {})
+    //   .to(classOf[xmlImpl.XmlFileIO])
+    // bind(classOf[ControllerInterface]).toInstance(
+    //   new Controller(board = Board(), persistence = XmlFileIO())
+    // )
 
-        /* JSON */
-        // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[jsonImpl.JsonFileIO])
-        // bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = JsonFileIO()))
+    /* JSON */
+    bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {})
+      .to(classOf[jsonImpl.JsonFileIO])
+    bind(classOf[ControllerInterface]).toInstance(
+      new Controller(board = Board(), persistence = JsonFileIO())
+    )
 
-        /* Slick - MySQL */
-        // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[slickImpl.SlickDao])
-        // bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = SlickDao()))
-        
-        /* MongoDB */
-        bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {}).to(classOf[mongoImpl.MongoDao])
-        bind(classOf[ControllerInterface]).toInstance(new Controller(board = Board(), persistence = MongoDao()))
-    }
+    /* Slick - MySQL */
+    // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {})
+    //   .to(classOf[slickImpl.SlickDao])
+    // bind(classOf[ControllerInterface]).toInstance(
+    //   new Controller(board = Board(), persistence = SlickDao())
+    // )
+
+    /* MongoDB */
+    // bind[PersistenceInterface](new TypeLiteral[PersistenceInterface] {})
+    //   .to(classOf[mongoImpl.MongoDao])
+    // bind(classOf[ControllerInterface]).toInstance(
+    //   new Controller(board = Board(), persistence = MongoDao())
+    // )
+  }
 }

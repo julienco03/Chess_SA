@@ -12,7 +12,7 @@ lazy val guiceDependencies = Seq(
 )
 
 lazy val testDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test,
+  "org.scalameta" %% "munit" % "1.0.0" % Test,
   "org.scalactic" %% "scalactic" % testVersion,
   "org.scalatest" %% "scalatest" % testVersion % "test"
 )

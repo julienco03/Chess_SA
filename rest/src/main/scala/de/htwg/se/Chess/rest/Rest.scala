@@ -6,7 +6,12 @@ import utils.Observer
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{
+  ContentTypes,
+  HttpEntity,
+  HttpResponse,
+  StatusCodes
+}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import com.typesafe.config.ConfigFactory
@@ -20,8 +25,8 @@ case class Rest(controller: ControllerInterface) extends Observer {
   implicit val executionContext: ExecutionContext = system.dispatcher
 
   val config = ConfigFactory.load()
-  val serverPort = config.getInt("server.port")
-  val serverHost = config.getString("server.host")
+  val SERVER_PORT = config.getString("server.port")
+  val SERVER_HOST = config.getString("server.host")
 
   val WELCOME_STRING =
     """
@@ -30,7 +35,7 @@ case class Rest(controller: ControllerInterface) extends Observer {
       <h3>Available routes:</h3>
       <ul>
         <li><a href="/chess/new">GET           ->     chess/new</a></li>
-        <li><a href="/chess/move/A2/A4">POST           ->     chess/move/A2/A4</a></li>
+        <li><a href="/chess/move/A2/A4">GET           ->     chess/move/A2/A4</a></li>
         <li><a href="/chess/undo">GET           ->     chess/undo</a></li>
         <li><a href="/chess/redo">GET           ->     chess/redo</a></li>
         <li><a href="/chess/load">GET           ->     chess/load</a></li>
@@ -51,11 +56,11 @@ case class Rest(controller: ControllerInterface) extends Observer {
   val exitRoute =
     path("exit") {
       get {
-          bindingFuture
-              .flatMap(_.unbind()) // trigger unbinding from the port
-              .onComplete(_ => system.terminate()) // and shutdown when done
-              System.exit(0) // terminate TUI and GUI
-          complete("Chess API terminated.")
+        bindingFuture
+          .flatMap(_.unbind()) // trigger unbinding from the port
+          .onComplete(_ => system.terminate()) // and shutdown when done
+        System.exit(0) // terminate TUI and GUI
+        complete("Chess API terminated.")
       }
     }
 
@@ -67,5 +72,6 @@ case class Rest(controller: ControllerInterface) extends Observer {
     }
   )
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt(serverHost, serverPort).bind(route)
+  val bindingFuture: Future[Http.ServerBinding] =
+    Http().newServerAt(SERVER_HOST, SERVER_PORT.toInt).bind(route)
 }

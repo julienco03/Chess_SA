@@ -1,4 +1,0 @@
-RUN	io.gatling.demo.RecordedSimulation	recordedsimulation	1717418656096	 	3.11.3
-USER	RecordedSimulation	START	1717418656560
-REQUEST		request_0	1717418656548	1717418656568	OK	 
-USER	RecordedSimulation	END	1717418656578

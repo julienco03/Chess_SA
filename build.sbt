@@ -1,6 +1,6 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-ThisBuild / scalaVersion := "3.3.1"
+ThisBuild / scalaVersion := "3.3.3"
 
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
@@ -19,7 +19,7 @@ lazy val testDependencies = Seq(
 
 lazy val guiDependencies = Seq(
   "org.scalafx" %% "scalafx" % "18.0.1-R28",
-  "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
+  ("org.scala-lang.modules" %% "scala-swing" % "3.0.0").cross(CrossVersion.for3Use2_13),
 )
 
 lazy val xmlDependencies = Seq(
@@ -30,15 +30,14 @@ lazy val jsonDependencies = Seq(
   ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13),
 )
 
-
 lazy val akkaDependencies = Seq(
-  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
-  "com.typesafe.akka" %% "akka-http" % "10.5.3",
+  ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion).cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka" %% "akka-stream" % akkaVersion).cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka" %% "akka-http" % "10.5.3").cross(CrossVersion.for3Use2_13),
 )
 
 lazy val loggingDependencies = Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
+  ("com.typesafe.scala-logging" %% "scala-logging" % "3.9.5").cross(CrossVersion.for3Use2_13),
   "ch.qos.logback" % "logback-classic" % "1.5.6",
   "org.slf4j" % "slf4j-api" % "2.0.12",
 )
@@ -57,6 +56,11 @@ lazy val mongoDependencies = Seq(
   ("org.mongodb.scala" %% "mongo-scala-driver" % "4.9.0").cross(CrossVersion.for3Use2_13),
 )
 
+lazy val gatlingDependencies = Seq(
+  "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
+)
+
 lazy val commonSettings = Seq(
   libraryDependencies ++= guiceDependencies ++
     testDependencies ++
@@ -67,7 +71,8 @@ lazy val commonSettings = Seq(
     loggingDependencies ++
     slickDependencies ++
     mysqlDependencies ++
-    mongoDependencies
+    mongoDependencies ++
+    gatlingDependencies
 )
 
 lazy val root = project
@@ -78,6 +83,7 @@ lazy val root = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
+  .enablePlugins(GatlingPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
   .dependsOn(controller, logic, persistence, rest, ui, utils)
 
@@ -133,3 +139,17 @@ lazy val utils = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
+
+//libraryDependencies ++= Seq(
+//  "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
+//  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
+//)
+
+//scalacOptions := Seq(
+//  "-encoding", "UTF-8", "release:8", "-deprecation", "-feature", "-unchecked",
+//  "-language:implicitConversions", "-language:postfixOps"
+//)
+
+//val gatlingVersion = "3.11.3"
+//libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test,it"
+//libraryDependencies += "io.gatling"            % "gatling-test-framework"    % gatlingVersion % "test,it"

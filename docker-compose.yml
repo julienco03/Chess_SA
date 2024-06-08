@@ -22,7 +22,7 @@ services:
       - MYSQL_USER=chess_user
       - MYSQL_PASSWORD=chess_password
     ports:
-      - "3306:3306"
+      - "3307:3307"
     volumes:
       - mysql_data:/var/lib/mysql
 

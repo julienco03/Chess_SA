@@ -5,8 +5,6 @@ import aview.TUI
 import controller.ControllerInterface
 import rest.Rest
 
-import scala.io.StdIn.readLine
-import scala.util.{Try, Success, Failure}
 import com.google.inject.Guice
 
 object Chess extends Thread {
@@ -16,12 +14,5 @@ object Chess extends Thread {
   val tui = new TUI(controller)
   val gui = new GUI(controller)
 
-  def main(args: Array[String]): Unit = {
-    var input: String = ""
-    while
-      input = readLine("->")
-      tui.process(input)
-      input != "exit"
-    do ()
-  }
+  def main(args: Array[String]): Unit = tui.start()
 }

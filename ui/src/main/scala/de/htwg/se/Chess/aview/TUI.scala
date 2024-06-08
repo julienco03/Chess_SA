@@ -5,19 +5,35 @@ import controller.ControllerInterface
 import controller.controllerComponent._
 import utils.Observer
 
+import scala.io.StdIn.readLine
 import scala.util.{Try, Success, Failure}
 import scala.util.matching.Regex
+import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, Materializer}
 
 class TUI(controller: ControllerInterface) extends Observer {
+  controller.add(this)
+
+  // Initialize composite pattern
   val boss = new Boss(None)
   val supervisor = new Supervisor(Some(boss))
   val agent = new Agent(Some(supervisor))
 
-  val moveRegex: Regex = "move [A-H][1-8] [A-H][1-8]".r
+  // Create the Actor System and Materializer
+  implicit val system: ActorSystem = ActorSystem("ChessActorSystem2")
+  implicit val materializer: Materializer = ActorMaterializer()
 
-  controller.add(this)
-  println(welcomeMessage)
-  update
+  // Initialize the API Client
+  val apiClient = new ApiClient
+
+  def start(): Unit = {
+    println(welcomeMessage)
+    var input: String = ""
+    while (input != "exit") {
+      input = readLine("->")
+      process(input)
+    }
+  }
 
   def process(in: String): Unit =
     commands(in) match
@@ -48,17 +64,19 @@ class TUI(controller: ControllerInterface) extends Observer {
           case "help" :: Nil => Some(agent.handleEvent(events(1)))
           case "undo" :: Nil =>
             agent.handleEvent(events(2))
-            controller.undo()
+            apiClient.undoMove()
+            this.update
             None
           case "redo" :: Nil =>
             agent.handleEvent(events(3))
-            controller.redo()
+            apiClient.redoMove()
+            this.update
             None
-          case "move" :: pos_now_in :: pos_new_in :: Nil =>
-            if (checkRegex(in, moveRegex))
-              if (controller.last_turn() == controller.get_player_c(pos_now_in))
-                controller.domove()
-                controller.move_c(pos_now_in, pos_new_in)
+          case "move" :: old_pos :: new_pos :: Nil =>
+            if (checkRegex(in, "move [A-H][1-8] [A-H][1-8]".r))
+              if (controller.last_turn() == controller.get_player_c(old_pos))
+                apiClient.processMove(old_pos, new_pos)
+                this.update
                 Some(agent.handleEvent(events(4)))
               else Some("Invalid Move!")
             else

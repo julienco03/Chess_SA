@@ -15,10 +15,10 @@ class ApiClient(implicit
 ) {
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val config = ConfigFactory.load()
-  val SERVER_PORT: String = config.getString("server.port")
-  val SERVER_HOST: String = config.getString("server.host")
-  val BASE_URL = s"http://$SERVER_HOST:$SERVER_PORT"
+  private val config = ConfigFactory.load()
+  private val SERVER_PORT: String = config.getString("server.port")
+  private val SERVER_HOST: String = config.getString("server.host")
+  private val BASE_URL = s"http://$SERVER_HOST:$SERVER_PORT"
 
   private def sendRequest(httpRequest: HttpRequest): Future[HttpResponse] = {
     Http().singleRequest(httpRequest)

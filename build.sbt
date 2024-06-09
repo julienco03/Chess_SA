@@ -81,7 +81,11 @@ lazy val commonSettings = Seq(
     slickDependencies ++
     mysqlDependencies ++
     mongoDependencies ++
-    gatlingDependencies
+    gatlingDependencies ++
+    Seq(
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+      "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
+    )
 )
 
 lazy val root = project
@@ -144,6 +148,3 @@ lazy val utils = project
     name := "utils",
     commonSettings
   )
-
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.0"
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.0"

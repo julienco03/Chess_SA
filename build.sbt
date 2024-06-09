@@ -2,6 +2,12 @@ import org.scoverage.coveralls.Imports.CoverallsKeys._
 
 ThisBuild / scalaVersion := "3.3.1"
 
+ThisBuild / scalacOptions ++= Seq(
+  "-deprecation",
+  "-unchecked",
+  "-feature"
+)
+
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
 val akkaVersion = "2.8.5"
@@ -29,7 +35,6 @@ lazy val xmlDependencies = Seq(
 )
 
 lazy val jsonDependencies = Seq(
-  // ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
   "org.playframework" %% "play-json" % "3.0.3"
 )
 
@@ -95,6 +100,11 @@ dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
+
+excludeDependencies += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.17.0"
+excludeDependencies += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.17.1"
+excludeDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.17.0"
+excludeDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.17.1"
 
 lazy val root = project
   .in(file("."))

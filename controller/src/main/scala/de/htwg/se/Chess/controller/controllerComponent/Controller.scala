@@ -22,11 +22,13 @@ case class Controller @Inject() (
 ) extends ControllerInterface:
 
   var game_state: GameState = NO_WINNER_YET
-  private val history_manager = new HistoryManager
-  val playersystem: PlayerSystem = new PlayerSystem()
+  var history_manager = new HistoryManager
+  var playersystem: PlayerSystem = new PlayerSystem()
 
   def new_game(): Board =
     board = Board()
+    this.playersystem = new PlayerSystem()
+    this.history_manager = new HistoryManager
     notifyObservers
     publish(new CellChanged)
     board

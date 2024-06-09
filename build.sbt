@@ -65,10 +65,10 @@ lazy val mongoDependencies = Seq(
   )
 )
 
-// lazy val gatlingDependencies = Seq(
-//   "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
-//   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
-// )
+lazy val gatlingDependencies = Seq(
+  "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
+)
 
 lazy val commonSettings = Seq(
   libraryDependencies ++= guiceDependencies ++
@@ -81,7 +81,7 @@ lazy val commonSettings = Seq(
     slickDependencies ++
     mysqlDependencies ++
     mongoDependencies ++
-    // gatlingDependencies ++
+    gatlingDependencies ++
     Seq(
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
       "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
@@ -100,7 +100,7 @@ lazy val root = project
     version := "0.1.0-SNAPSHOT",
     commonSettings
   )
-  // .enablePlugins(GatlingPlugin)
+  .enablePlugins(GatlingPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
   .dependsOn(controller, logic, persistence, rest, ui, utils)
 

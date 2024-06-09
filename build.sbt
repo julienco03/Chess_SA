@@ -1,6 +1,6 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.3.1"
 
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"

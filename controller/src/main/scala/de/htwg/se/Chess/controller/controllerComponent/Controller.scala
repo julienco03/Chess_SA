@@ -16,11 +16,14 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import play.api.libs.json.{JsObject, Json}
 
-case class Controller @Inject() (var board: Board, var persistence: PersistenceInterface) extends ControllerInterface:
+case class Controller @Inject() (
+    var board: Board,
+    var persistence: PersistenceInterface
+) extends ControllerInterface:
 
   var game_state: GameState = NO_WINNER_YET
   private val history_manager = new HistoryManager
-  val playersystem:PlayerSystem = new PlayerSystem()
+  val playersystem: PlayerSystem = new PlayerSystem()
 
   def new_game(): Board =
     board = Board()
@@ -28,18 +31,15 @@ case class Controller @Inject() (var board: Board, var persistence: PersistenceI
     publish(new CellChanged)
     board
 
-  def board_to_string_c() : String = board.board_to_string()
+  def board_to_string_c(): String = board.board_to_string()
 
-  def move_c(pos_now : String, pos_new : String) : Unit =
+  def move_c(pos_now: String, pos_new: String): Unit =
+    history_manager.doMove(new SolveCommand(this))
     board = board.move(pos_now, pos_new)
     change_player()
     check_winner()
     notifyObservers
     publish(new CellChanged)
-
-  def domove(): Unit = {
-    history_manager.doMove(new SolveCommand(this))
-  }
 
   def get_player_c(pos_now: String): String =
     board.get_player(pos_now)
@@ -48,16 +48,16 @@ case class Controller @Inject() (var board: Board, var persistence: PersistenceI
     playersystem.changeState()
 
   def last_turn(): String =
-    if(playersystem.previousState.isInstanceOf[PlayerOne])
-        "2"
+    if (playersystem.previousState.isInstanceOf[PlayerOne])
+      "2"
     else
-        "1"
+      "1"
 
   def check_winner(): Unit = {
     val success = board.game_finished(board.board)
     if (success == 1) game_state = PLAYER1
     else if (success == 2) game_state = PLAYER2
-      else game_state = NO_WINNER_YET
+    else game_state = NO_WINNER_YET
   }
 
   def load: Board = {
@@ -96,38 +96,38 @@ case class Controller @Inject() (var board: Board, var persistence: PersistenceI
   }
 
   override val controllerRoute: Route = concat(
-      get {
-        concat(
-          path("new") {
-            new_game()
-            complete("Game reset successful")
-          },
-          path("move" / Segment / Segment) { (x: String, y: String) =>
-            move_c(x, y)
-            complete("Move successful")
-          },
-          path("undo") {
-            undo()
-            complete("Undo successful")
-          },
-          path("redo") {
-            redo()
-            complete("Redo successful")
-          },
-          path("save") {
-            save
-            complete("Save successful")
-          },
-          path("load") {
-            load
-            complete("Load successful")
-          },
-          path("board") {
-            complete(board_to_string_c())
-          },
-          path("") {
-            sys.error("POST Route does not exist")
-          }
-        )
-      }
-    )
+    get {
+      concat(
+        path("new") {
+          new_game()
+          complete("Game reset successful")
+        },
+        path("move" / Segment / Segment) { (x: String, y: String) =>
+          move_c(x, y)
+          complete("Move successful")
+        },
+        path("undo") {
+          undo()
+          complete("Undo successful")
+        },
+        path("redo") {
+          redo()
+          complete("Redo successful")
+        },
+        path("save") {
+          save
+          complete("Save successful")
+        },
+        path("load") {
+          load
+          complete("Load successful")
+        },
+        path("board") {
+          complete(board_to_string_c())
+        },
+        path("") {
+          sys.error("POST Route does not exist")
+        }
+      )
+    }
+  )

@@ -8,52 +8,61 @@ val akkaVersion = "2.8.5"
 
 lazy val guiceDependencies = Seq(
   "com.google.inject" % "guice" % "5.1.0",
-  ("net.codingwell" %% "scala-guice" % "5.1.0").cross(CrossVersion.for3Use2_13),
+  ("net.codingwell" %% "scala-guice" % "5.1.0").cross(CrossVersion.for3Use2_13)
 )
 
 lazy val testDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test,
+  "org.scalameta" %% "munit" % "1.0.0" % Test,
   "org.scalactic" %% "scalactic" % testVersion,
-  "org.scalatest" %% "scalatest" % testVersion % "test",
+  "org.scalatest" %% "scalatest" % testVersion % "test"
 )
 
 lazy val guiDependencies = Seq(
   "org.scalafx" %% "scalafx" % "18.0.1-R28",
-  ("org.scala-lang.modules" %% "scala-swing" % "3.0.0").cross(CrossVersion.for3Use2_13),
+  ("org.scala-lang.modules" %% "scala-swing" % "3.0.0").cross(
+    CrossVersion.for3Use2_13
+  )
 )
 
 lazy val xmlDependencies = Seq(
-  "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
+  "org.scala-lang.modules" %% "scala-xml" % "2.0.1"
 )
 
 lazy val jsonDependencies = Seq(
-  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
 )
 
 lazy val akkaDependencies = Seq(
-  ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion).cross(CrossVersion.for3Use2_13),
-  ("com.typesafe.akka" %% "akka-stream" % akkaVersion).cross(CrossVersion.for3Use2_13),
-  ("com.typesafe.akka" %% "akka-http" % "10.5.3").cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion)
+    .cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka" %% "akka-stream" % akkaVersion)
+    .cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka" %% "akka-http" % "10.5.3").cross(
+    CrossVersion.for3Use2_13
+  )
 )
 
 lazy val loggingDependencies = Seq(
-  ("com.typesafe.scala-logging" %% "scala-logging" % "3.9.5").cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.scala-logging" %% "scala-logging" % "3.9.5")
+    .cross(CrossVersion.for3Use2_13),
   "ch.qos.logback" % "logback-classic" % "1.5.6",
-  "org.slf4j" % "slf4j-api" % "2.0.12",
+  "org.slf4j" % "slf4j-api" % "2.0.12"
 )
 
 lazy val slickDependencies = Seq(
   "com.typesafe.slick" %% "slick" % slickVersion,
   "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
-  "com.typesafe.slick" %% "slick-codegen" % slickVersion,
+  "com.typesafe.slick" %% "slick-codegen" % slickVersion
 )
 
 lazy val mysqlDependencies = Seq(
-  "mysql" % "mysql-connector-java" % "8.0.28",
+  "mysql" % "mysql-connector-java" % "8.0.28"
 )
 
 lazy val mongoDependencies = Seq(
-  ("org.mongodb.scala" %% "mongo-scala-driver" % "4.9.0").cross(CrossVersion.for3Use2_13),
+  ("org.mongodb.scala" %% "mongo-scala-driver" % "4.9.0").cross(
+    CrossVersion.for3Use2_13
+  )
 )
 
 lazy val gatlingDependencies = Seq(
@@ -108,27 +117,27 @@ lazy val logic = project
 lazy val persistence = project
   .in(file("persistence"))
   .settings(
-      name := "persistence",
-      commonSettings
-    )
+    name := "persistence",
+    commonSettings
+  )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic)
 
 lazy val rest = project
   .in(file("rest"))
   .settings(
-      name := "rest",
-      commonSettings
-    )
+    name := "rest",
+    commonSettings
+  )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val ui = project
   .in(file("ui"))
   .settings(
-      name := "ui",
-      commonSettings
-    )
+    name := "ui",
+    commonSettings
+  )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
@@ -139,17 +148,3 @@ lazy val utils = project
     commonSettings
   )
   .enablePlugins(CoverallsPlugin)
-
-//libraryDependencies ++= Seq(
-//  "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
-//  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
-//)
-
-//scalacOptions := Seq(
-//  "-encoding", "UTF-8", "release:8", "-deprecation", "-feature", "-unchecked",
-//  "-language:implicitConversions", "-language:postfixOps"
-//)
-
-//val gatlingVersion = "3.11.3"
-//libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test,it"
-//libraryDependencies += "io.gatling"            % "gatling-test-framework"    % gatlingVersion % "test,it"

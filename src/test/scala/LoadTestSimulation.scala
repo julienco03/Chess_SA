@@ -4,7 +4,7 @@ import io.gatling.core.Predef.*
 import io.gatling.http.Predef.*
 import concurrent.duration.DurationInt
 
-class EnduranceTestSimulation extends Simulation {
+class LoadTestSimulation extends Simulation {
 
   val httpProtocol = http
     .baseUrl("http://localhost:8000") // Replace with your base URL
@@ -15,7 +15,8 @@ class EnduranceTestSimulation extends Simulation {
   val fullDuration = 60.seconds
 
   val scn = scenario("Load Test Scenario")
-    .exec(http("save load").get("/chess/save"))
+    .exec(http("save load").get("/chess/load"))
 
-   setUp(scn.inject(rampUsers(userAmount).during(fullDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(userAmount).during(fullDuration)))
+    .protocols(httpProtocol)
 }

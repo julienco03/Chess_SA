@@ -31,7 +31,10 @@ class JsonFileIO extends PersistenceInterface {
     val source: String = Source.fromFile(jsonFilePath).getLines.mkString
     val json: JsValue = Json.parse(source)
 
-    def updateBoard(index: Int, board: VectorMap[String, String]): VectorMap[String, String] = {
+    def updateBoard(
+        index: Int,
+        board: VectorMap[String, String]
+    ): VectorMap[String, String] = {
       if (index < 8 * 8) {
         val pos = (json \\ "pos")(index).as[String]
         val figure = (json \\ "figure")(index).as[String]
@@ -56,9 +59,17 @@ class JsonFileIO extends PersistenceInterface {
   }
 
   def vectorMapToJson(board: Board): String = {
-    val tmp: Seq[(String, String)] = board.board.toSeq // Convert to Seq of tuples
+    if (board.board.isEmpty) {
+      return ""
+    }
 
-    def convertEntriesToJson(entries: Seq[(String, String)], acc: List[JsObject]): List[JsObject] = {
+    val tmp: Seq[(String, String)] =
+      board.board.toSeq // Convert to Seq of tuples
+
+    def convertEntriesToJson(
+        entries: Seq[(String, String)],
+        acc: List[JsObject]
+    ): List[JsObject] = {
       entries match {
         case Nil => acc.reverse
         case (pos, figure) :: tail =>
@@ -78,8 +89,8 @@ class JsonFileIO extends PersistenceInterface {
     )
     Json.stringify(jsonData)
   }
-  
+
   override def updateGame(board: Board): Unit = ???
-  
+
   override def deleteGame(): Unit = ???
 }

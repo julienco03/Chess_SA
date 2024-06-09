@@ -84,17 +84,17 @@ lazy val commonSettings = Seq(
     mongoDependencies ++
     gatlingDependencies ++
     Seq(
-      "com.fasterxml.jackson.core" % "jackson-core" % "2.15.3",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.3",
-      "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.3",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.3"
+      "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2",
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+      "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2",
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
     )
 )
 
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.3"
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.3"
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.3"
-dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.3"
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2"
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
+dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 
 lazy val root = project
   .in(file("."))

@@ -88,6 +88,11 @@ lazy val commonSettings = Seq(
     )
 )
 
+dependencyOverrides += Seq(
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
+)
+
 lazy val root = project
   .in(file("."))
   .settings(

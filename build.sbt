@@ -29,7 +29,8 @@ lazy val xmlDependencies = Seq(
 )
 
 lazy val jsonDependencies = Seq(
-  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
+  // ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
+  "org.playframework" %% "play-json" % "3.0.3"
 )
 
 lazy val akkaDependencies = Seq(

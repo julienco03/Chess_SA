@@ -91,7 +91,6 @@ lazy val root = project
     version := "0.1.0-SNAPSHOT",
     commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .enablePlugins(GatlingPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
   .dependsOn(controller, logic, persistence, rest, ui, utils)
@@ -129,7 +128,6 @@ lazy val rest = project
     name := "rest",
     commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val ui = project
@@ -138,7 +136,6 @@ lazy val ui = project
     name := "ui",
     commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val utils = project
@@ -147,4 +144,6 @@ lazy val utils = project
     name := "utils",
     commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
+
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.0"
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.0"

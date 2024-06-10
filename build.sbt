@@ -101,11 +101,6 @@ dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 
-excludeDependencies += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.17.0"
-excludeDependencies += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.17.1"
-excludeDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.17.0"
-excludeDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.17.1"
-
 lazy val root = project
   .in(file("."))
   .settings(

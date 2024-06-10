@@ -35,7 +35,9 @@ lazy val xmlDependencies = Seq(
 )
 
 lazy val jsonDependencies = Seq(
-  "org.playframework" %% "play-json" % "3.0.3"
+  ("com.typesafe.play" %% "play-json" % "2.10.5").cross(
+    CrossVersion.for3Use2_13
+  )
 )
 
 lazy val akkaDependencies = Seq(
@@ -91,15 +93,13 @@ lazy val commonSettings = Seq(
     Seq(
       "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2",
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
-      "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
+      "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
     )
 )
 
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2"
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
-dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 
 lazy val root = project
   .in(file("."))

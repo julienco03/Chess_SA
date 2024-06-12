@@ -10,6 +10,8 @@ ThisBuild / scalacOptions ++= Seq(
 
 logLevel := Level.Debug
 
+logLevel := Level.Debug
+
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
 val akkaVersion = "2.8.5"
@@ -78,6 +80,16 @@ lazy val mongoDependencies = Seq(
 lazy val gatlingDependencies = Seq(
   "io.gatling" % "gatling-test-framework" % "3.11.3" % Test,
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
+)
+
+lazy val jacksonDependencies = Seq(
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.15.2",
+  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.15.2",
+  "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
 )
 
 lazy val jacksonDependencies = Seq(

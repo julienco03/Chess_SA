@@ -78,31 +78,34 @@ lazy val gatlingDependencies = Seq(
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
 )
 
-lazy val commonSettings = Seq(
-  libraryDependencies ++= guiceDependencies ++
-    testDependencies ++
-    guiDependencies ++
-    xmlDependencies ++
-    jsonDependencies ++
-    akkaDependencies ++
-    loggingDependencies ++
-    slickDependencies ++
-    mysqlDependencies ++
-    mongoDependencies ++
-    gatlingDependencies ++
-    Seq(
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.1"
-    )
-)
+ThisBuild / libraryDependencies ++= guiceDependencies ++
+  testDependencies ++
+  guiDependencies ++
+  xmlDependencies ++
+  jsonDependencies ++
+  akkaDependencies ++
+  loggingDependencies ++
+  slickDependencies ++
+  mysqlDependencies ++
+  mongoDependencies ++
+  gatlingDependencies ++
+  Seq(
+    "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2",
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+    "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
+  )
 
-dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.1"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 
 lazy val root = project
   .in(file("."))
   .settings(
     name := "chess_sa",
     version := "0.1.0-SNAPSHOT",
-    commonSettings
   )
   .enablePlugins(GatlingPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
@@ -113,7 +116,6 @@ lazy val controller = project
   .dependsOn(logic, utils)
   .settings(
     name := "controller",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic, persistence, utils)
@@ -122,7 +124,6 @@ lazy val logic = project
   .in(file("logic"))
   .settings(
     name := "logic",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
 
@@ -130,7 +131,6 @@ lazy val persistence = project
   .in(file("persistence"))
   .settings(
     name := "persistence",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic)
@@ -139,7 +139,6 @@ lazy val rest = project
   .in(file("rest"))
   .settings(
     name := "rest",
-    commonSettings
   )
   .dependsOn(controller, utils)
 
@@ -147,7 +146,6 @@ lazy val ui = project
   .in(file("ui"))
   .settings(
     name := "ui",
-    commonSettings
   )
   .dependsOn(controller, utils)
 
@@ -155,5 +153,4 @@ lazy val utils = project
   .in(file("utils"))
   .settings(
     name := "utils",
-    commonSettings
   )

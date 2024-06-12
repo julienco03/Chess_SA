@@ -78,6 +78,11 @@ lazy val gatlingDependencies = Seq(
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
 )
 
+lazy val jacksonDependencies = Seq(
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
+    )
+
 lazy val commonSettings = Seq(
   libraryDependencies ++= guiceDependencies ++
     testDependencies ++
@@ -90,11 +95,7 @@ lazy val commonSettings = Seq(
     mysqlDependencies ++
     mongoDependencies ++
     gatlingDependencies ++
-    
-  libraryDependencies ++= Seq(
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
-    )
+    jacksonDependencies
 )
 
 // dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.1"

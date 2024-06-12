@@ -80,14 +80,14 @@ lazy val gatlingDependencies = Seq(
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
 )
 
-lazy val jacksonDependencies = Seq(    
-    "com.fasterxml.jackson.module" % "jackson-module-scala" % "2.15.2",
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.15.2",
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.15.2",
-    "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.15.2",
-    "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % "2.15.2",
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
-    "com.fasterxml.jackson.core" % "jackson-core"     % "2.15.2"
+lazy val jacksonDependencies = Seq(
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.15.2",
+  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.15.2",
+  "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
 )
 
 lazy val commonSettings = Seq(
@@ -104,7 +104,7 @@ lazy val commonSettings = Seq(
     gatlingDependencies ++
     jacksonDependencies,
   dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
-  dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala" % "2.15.2"
+  dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 )
 
 lazy val root = project

@@ -79,9 +79,9 @@ lazy val gatlingDependencies = Seq(
 )
 
 lazy val jacksonDependencies = Seq(
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
-    )
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
+)
 
 lazy val commonSettings = Seq(
   libraryDependencies ++= guiceDependencies ++
@@ -95,10 +95,10 @@ lazy val commonSettings = Seq(
     mysqlDependencies ++
     mongoDependencies ++
     gatlingDependencies ++
-    jacksonDependencies
+    jacksonDependencies,
+  dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.2",
+  dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 )
-
-// dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.1"
 
 lazy val root = project
   .in(file("."))

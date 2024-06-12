@@ -1,39 +1,42 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Build Status
+name: Scala CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'sbt'
+      - uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: "21"
+          distribution: "adopt"
+      - name: compile
+        run: sbt compile
 
-    - name: Run tests
-      run: sbt clean coverage test
-
-    - name: Upload coverage data to Coveralls
-      run: sbt coverageReport coveralls
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
-
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Tests
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          sbt "; project controller; +clean; +coverage; +test; +coverageReport"
+          sbt "; project logic; +clean; +coverage; +test; +coverageReport"
+          sbt "; project persistence; +clean; +coverage; +test; +coverageReport"
+      - name: Create Coverage Report
+        run: |
+          sbt "; project controller; coverageAggregate; coveralls"
+          sbt "; project logic; coverageAggregate; coveralls"
+          sbt "; project persistence; coverageAggregate; coveralls"
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

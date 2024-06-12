@@ -1,6 +1,12 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
 
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.3.1"
+
+ThisBuild / scalacOptions ++= Seq(
+  "-deprecation",
+  "-unchecked",
+  "-feature"
+)
 
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
@@ -29,7 +35,9 @@ lazy val xmlDependencies = Seq(
 )
 
 lazy val jsonDependencies = Seq(
-  ("com.typesafe.play" %% "play-json" % "2.9.3").cross(CrossVersion.for3Use2_13)
+  ("com.typesafe.play" %% "play-json" % "2.10.5").cross(
+    CrossVersion.for3Use2_13
+  )
 )
 
 lazy val akkaDependencies = Seq(
@@ -70,28 +78,40 @@ lazy val gatlingDependencies = Seq(
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % Test
 )
 
-lazy val commonSettings = Seq(
-  libraryDependencies ++= guiceDependencies ++
-    testDependencies ++
-    guiDependencies ++
-    xmlDependencies ++
-    jsonDependencies ++
-    akkaDependencies ++
-    loggingDependencies ++
-    slickDependencies ++
-    mysqlDependencies ++
-    mongoDependencies ++
-    gatlingDependencies
+lazy val jacksonDependencies = Seq(
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.15.2",
+  "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.15.2",
+  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.15.2",
+  "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % "2.15.2",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.0",
+  "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
 )
+
+ThisBuild / libraryDependencies ++= guiceDependencies ++
+  testDependencies ++
+  guiDependencies ++
+  xmlDependencies ++
+  jsonDependencies ++
+  akkaDependencies ++
+  loggingDependencies ++
+  slickDependencies ++
+  mysqlDependencies ++
+  mongoDependencies ++
+  gatlingDependencies ++
+  jacksonDependencies
+
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.15.2"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.0"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.15.2"
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2"
 
 lazy val root = project
   .in(file("."))
   .settings(
     name := "chess_sa",
     version := "0.1.0-SNAPSHOT",
-    commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .enablePlugins(GatlingPlugin)
   .aggregate(controller, logic, persistence, rest, ui, utils)
   .dependsOn(controller, logic, persistence, rest, ui, utils)
@@ -101,7 +121,6 @@ lazy val controller = project
   .dependsOn(logic, utils)
   .settings(
     name := "controller",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic, persistence, utils)
@@ -110,7 +129,6 @@ lazy val logic = project
   .in(file("logic"))
   .settings(
     name := "logic",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
 
@@ -118,7 +136,6 @@ lazy val persistence = project
   .in(file("persistence"))
   .settings(
     name := "persistence",
-    commonSettings
   )
   .enablePlugins(CoverallsPlugin)
   .dependsOn(logic)
@@ -127,24 +144,18 @@ lazy val rest = project
   .in(file("rest"))
   .settings(
     name := "rest",
-    commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val ui = project
   .in(file("ui"))
   .settings(
     name := "ui",
-    commonSettings
   )
-  .enablePlugins(CoverallsPlugin)
   .dependsOn(controller, utils)
 
 lazy val utils = project
   .in(file("utils"))
   .settings(
     name := "utils",
-    commonSettings
   )
-  .enablePlugins(CoverallsPlugin)

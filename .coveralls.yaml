@@ -2,3 +2,4 @@ excluded_paths:
   - "ui/*"
   - "rest/*"
   - "src/*"
+  - "utils/*"

@@ -20,6 +20,11 @@ import akka.stream.scaladsl.{Sink, Source, Flow, Keep}
 import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy}
 import akka.{Done, NotUsed}
 
+import akka.kafka.{ProducerSettings, ConsumerSettings, Subscriptions}
+import akka.kafka.scaladsl.{Producer, Consumer}
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializer}
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -34,6 +39,26 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
   implicit val system: ActorSystem = ActorSystem("ChessActorSystem")
   implicit val materializer: Materializer = ActorMaterializer()
 
+
+  val consumerSettings = ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
+  .withBootstrapServers("127.0.0.1:9092")
+  .withGroupId("group1")
+  .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+
+  def consumeMessages(topic: String): Unit = {
+    Consumer
+      .plainSource(consumerSettings, Subscriptions.topics(topic))
+      .map(record => record.value())
+      .runWith(Sink.foreach(println))(materializer) // Example: printing each message
+  }
+
+  def startConsuming(topic: String): Unit = {
+    Consumer
+      .plainSource(consumerSettings, Subscriptions.topics(topic))
+      .map(record => record.value())
+      .runWith(Sink.foreach(updateGUI))(materializer) // todo: update GUI
+  }
+  
   // Initialize the API Client
   val apiClient = new ApiClient
 

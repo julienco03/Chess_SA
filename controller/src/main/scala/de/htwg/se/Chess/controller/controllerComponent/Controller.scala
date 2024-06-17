@@ -14,12 +14,41 @@ import com.google.inject.{Guice, Inject}
 
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
+import akka.stream.{Materializer, ActorMaterializer}
+import akka.actor.ActorSystem
+import scala.concurrent.ExecutionContextExecutor
 import play.api.libs.json.{JsObject, Json}
+
+import akka.kafka.scaladsl.Producer
+import akka.kafka.ProducerSettings
+import org.apache.kafka.common.serialization.StringSerializer
+import akka.stream.scaladsl.Source
+import org.apache.kafka.clients.producer.ProducerRecord
+
+implicit val system: ActorSystem = ActorSystem("ChessSystem")
+implicit val materializer: Materializer = ActorMaterializer()
+implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
 case class Controller @Inject() (
     var board: Board,
     var persistence: PersistenceInterface
 ) extends ControllerInterface:
+
+  val producerSettings = ProducerSettings(system, new StringSerializer, new StringSerializer)
+  .withBootstrapServers("localhost:9092")
+  
+  def produceMessages(topic: String): Unit = {
+    val source = Source(1 to 100) // Example: sending numbers as messages
+      .map(_.toString)
+      .map(value => new ProducerRecord[String, String](topic, value))
+
+    source.runWith(Producer.plainSink(producerSettings))(materializer)
+  }
+
+  def sendMessage(topic: String, message: String): Unit = {
+    val record = new ProducerRecord[String, String](topic, message)
+    val runnable = Source.single(record).runWith(Producer.plainSink(producerSettings))(materializer)
+  }
 
   var game_state: GameState = NO_WINNER_YET
   var history_manager = new HistoryManager

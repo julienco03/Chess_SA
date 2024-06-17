@@ -4,11 +4,17 @@ ThisBuild / scalaVersion := "3.3.3"
 
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
-val akkaVersion = "2.8.5"
+val akkaVersion = "2.6.20"
 
 lazy val guiceDependencies = Seq(
   "com.google.inject" % "guice" % "5.1.0",
   ("net.codingwell" %% "scala-guice" % "5.1.0").cross(CrossVersion.for3Use2_13)
+)
+
+lazy val kafkaDependencies = Seq(
+    ("com.typesafe.akka" %% "akka-stream-kafka" % "4.0.2")
+    .cross(CrossVersion.for3Use2_13),
+    "org.apache.kafka" % "kafka-clients" % "2.6.0"
 )
 
 lazy val testDependencies = Seq(
@@ -81,7 +87,8 @@ lazy val commonSettings = Seq(
     slickDependencies ++
     mysqlDependencies ++
     mongoDependencies ++
-    gatlingDependencies
+    gatlingDependencies ++
+    kafkaDependencies
 )
 
 lazy val root = project

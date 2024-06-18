@@ -30,9 +30,6 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import scala.concurrent.ExecutionContextExecutor
 import play.api.libs.json.{JsObject, Json}
 
-// Import GameState definitions
-import de.htwg.se.Chess.controller.controllerComponent.{GameState, NO_WINNER_YET, PLAYER1, PLAYER2}
-
 case class Controller @Inject() (
     var board: Board,
     var persistence: PersistenceInterface

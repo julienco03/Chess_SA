@@ -3,21 +3,29 @@ package aview
 
 import aview.selectionSystem.*
 import controller.ControllerInterface
+import controller.controllerComponent._
 import utils.Observer
 
 import scala.swing._
 import javax.swing.border.EmptyBorder
+import scala.swing.event.Key
 import scala.swing.event.ButtonClicked
+import scalafx.scene.input.KeyCode.R
+import scalafx.scene.input.KeyCode.G
+import scala.swing.event.PopupMenuCanceled
 import javax.swing.JOptionPane
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
-import akka.stream.{Materializer, OverflowStrategy}
-import akka.kafka.{ConsumerSettings, Subscriptions}
-import akka.kafka.scaladsl.Consumer
-import org.apache.kafka.common.serialization.StringDeserializer
+import akka.stream.scaladsl.{Sink, Source, Flow, Keep}
+import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy}
+import akka.{Done, NotUsed}
 import org.apache.kafka.clients.consumer.ConsumerConfig
+import akka.kafka.{ProducerSettings, ConsumerSettings, Subscriptions}
+import akka.kafka.scaladsl.{Producer, Consumer}
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializer}
 
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class GUI(controller: ControllerInterface) extends Frame with Observer:

@@ -3,29 +3,21 @@ package aview
 
 import aview.selectionSystem.*
 import controller.ControllerInterface
-import controller.controllerComponent._
 import utils.Observer
 
 import scala.swing._
 import javax.swing.border.EmptyBorder
-import scala.swing.event.Key
 import scala.swing.event.ButtonClicked
-import scalafx.scene.input.KeyCode.R
-import scalafx.scene.input.KeyCode.G
-import scala.swing.event.PopupMenuCanceled
 import javax.swing.JOptionPane
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Sink, Source, Flow, Keep}
-import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy}
-import akka.{Done, NotUsed}
+import akka.stream.scaladsl.Sink
+import akka.stream.{Materializer, OverflowStrategy}
+import akka.kafka.{ConsumerSettings, Subscriptions}
+import akka.kafka.scaladsl.Consumer
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.kafka.clients.consumer.ConsumerConfig
 
-import akka.kafka.{ProducerSettings, ConsumerSettings, Subscriptions}
-import akka.kafka.scaladsl.{Producer, Consumer}
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializer}
-
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class GUI(controller: ControllerInterface) extends Frame with Observer:
@@ -37,28 +29,29 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   // Create the Actor System and Materializer
   implicit val system: ActorSystem = ActorSystem("ChessActorSystem")
-  implicit val materializer: Materializer = ActorMaterializer()
-
+  implicit val materializer: Materializer = Materializer(system)
 
   val consumerSettings = ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
-  .withBootstrapServers("127.0.0.1:9092")
-  .withGroupId("group1")
-  .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-
-  def consumeMessages(topic: String): Unit = {
-    Consumer
-      .plainSource(consumerSettings, Subscriptions.topics(topic))
-      .map(record => record.value())
-      .runWith(Sink.foreach(println))(materializer) // Example: printing each message
-  }
+    .withBootstrapServers("127.0.0.1:9092")
+    .withGroupId("group1")
+    .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
   def startConsuming(topic: String): Unit = {
     Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topic))
       .map(record => record.value())
-      .runWith(Sink.foreach(updateGUI))(materializer) // todo: update GUI
+      .runWith(Sink.foreach(updateGUI))(materializer) // Example: updating the GUI with each message
   }
-  
+
+  def updateGUI(message: String): Unit = {
+    // Logic to update the GUI based on the message
+    println(s"Received message: $message")
+    // Update your GUI elements here
+  }
+
+  // Start consuming messages from Kafka
+  startConsuming("chess-moves")
+
   // Initialize the API Client
   val apiClient = new ApiClient
 
@@ -70,11 +63,11 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
     )
     .preMaterialize()(materializer)
 
-  val flow = Flow[(String, String)].map { (oldPos, newPos) =>
+  val flow = Flow[(String, String)].map { case (oldPos, newPos) =>
     (oldPos, newPos)
   }
 
-  val sink: Sink[(String, String), Future[Done]] =
+  val sink: Sink[(String, String), _] =
     Sink.foreach[(String, String)] { case (oldPos, newPos) =>
       apiClient.processMove(oldPos, newPos)
       selection_system.changeState()
@@ -84,7 +77,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   // Connect the Source, Flow, and Sink
   val runnableGraph = source.via(flow).toMat(sink)(Keep.right)
-  val materialized = runnableGraph.run()(materializer)
+  runnableGraph.run()(materializer)
 
   title = "Chess Game"
   preferredSize = new Dimension(800, 800)
@@ -149,7 +142,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
   class CellButton(pos: String, figure: String) extends Button(figure):
     listenTo(mouse.clicks)
     listenTo(keys)
-    reactions += { case ButtonClicked(button) =>
+    reactions += { case ButtonClicked(_) =>
       selectionHandler(pos, figure)
     }
 

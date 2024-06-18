@@ -4,7 +4,7 @@ ThisBuild / scalaVersion := "3.3.3"
 
 val testVersion = "3.2.10"
 val slickVersion = "3.5.1"
-val akkaVersion = "2.6.20"
+val akkaVersion = "2.7.0"
 
 lazy val guiceDependencies = Seq(
   "com.google.inject" % "guice" % "5.1.0",

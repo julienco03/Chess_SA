@@ -28,6 +28,10 @@ import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializ
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, NewTopic}
+import java.util.Properties
+import scala.jdk.CollectionConverters._
+
 class GUI(controller: ControllerInterface) extends Frame with Observer:
   controller.add(this)
 
@@ -39,6 +43,28 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
   implicit val system: ActorSystem = ActorSystem("ChessActorSystem")
   implicit val materializer: Materializer = Materializer(system)
 
+  def createTopic(topic: String, partitions: Int, replicationFactor: Short): Unit = {
+    val props = new Properties()
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092")
+    
+    val adminClient = AdminClient.create(props)
+
+    val topicExists = adminClient.listTopics().names().get().contains(topic)
+
+    if (!topicExists) {
+      val newTopic = new NewTopic(topic, partitions, replicationFactor)
+      adminClient.createTopics(List(newTopic).asJava).all().get()
+      println(s"Topic $topic created")
+    } else {
+      println(s"Topic $topic already exists")
+    }
+
+    adminClient.close()
+  }
+
+  // Ensure the topic exists before consuming
+  createTopic("chess-moves", 1, 1)
+
   val consumerSettings = ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
     .withBootstrapServers("127.0.0.1:9092")
     .withGroupId("group1")
@@ -48,13 +74,13 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
     Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topic))
       .map(record => record.value())
-      .runWith(Sink.foreach(updateGUI))(materializer) // Example: updating the GUI with each message
+      .runWith(Sink.foreach(handleKafkaMessage))(materializer)
   }
 
-  def updateGUI(message: String): Unit = {
-    // Logic to update the GUI based on the message
-    println(s"Received message: $message")
-    // Update your GUI elements here
+  def handleKafkaMessage(message: String): Unit = {
+    // Instead of updating the GUI directly, perform a redo action
+    apiClient.exit()
+    // update
   }
 
   // Start consuming messages from Kafka

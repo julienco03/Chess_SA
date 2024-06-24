@@ -79,7 +79,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   def handleKafkaMessage(message: String): Unit = {
     // Instead of updating the GUI directly, perform a redo action
-    apiClient.exit()
+    apiClient.loadGame()
     // update
   }
 

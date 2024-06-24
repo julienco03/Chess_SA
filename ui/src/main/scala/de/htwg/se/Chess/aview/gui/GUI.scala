@@ -15,13 +15,21 @@ import scalafx.scene.input.KeyCode.G
 import scala.swing.event.PopupMenuCanceled
 import javax.swing.JOptionPane
 
+import java.util.Properties
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.jdk.CollectionConverters._
+
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Sink, Source, Flow, Keep}
 import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy}
 import akka.{Done, NotUsed}
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import akka.kafka.{ProducerSettings, ConsumerSettings, Subscriptions}
+import akka.kafka.scaladsl.{Producer, Consumer}
+import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, NewTopic}
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializer}
 
 class GUI(controller: ControllerInterface) extends Frame with Observer:
   controller.add(this)
@@ -32,7 +40,48 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   // Create the Actor System and Materializer
   implicit val system: ActorSystem = ActorSystem("ChessActorSystem")
-  implicit val materializer: Materializer = ActorMaterializer()
+  implicit val materializer: Materializer = Materializer(system)
+
+  def createTopic(topic: String, partitions: Int, replicationFactor: Short): Unit = {
+    val props = new Properties()
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092")
+    
+    val adminClient = AdminClient.create(props)
+
+    val topicExists = adminClient.listTopics().names().get().contains(topic)
+
+    if (!topicExists) {
+      val newTopic = new NewTopic(topic, partitions, replicationFactor)
+      adminClient.createTopics(List(newTopic).asJava).all().get()
+      println(s"Topic $topic created")
+    } else {
+      println(s"Topic $topic already exists")
+    }
+
+    adminClient.close()
+  }
+
+  // Ensure the topic exists before consuming
+  createTopic("chess-moves", 1, 1)
+
+  val consumerSettings = ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
+    .withBootstrapServers("127.0.0.1:9092")
+    .withGroupId("group1")
+    .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+
+  def startConsuming(topic: String): Unit = {
+    Consumer
+      .plainSource(consumerSettings, Subscriptions.topics(topic))
+      .map(record => record.value())
+      .runWith(Sink.foreach(handleKafkaMessage))(materializer)
+  }
+
+  def handleKafkaMessage(message: String): Unit = {
+    apiClient.loadGame()
+  }
+
+  // Start consuming messages from Kafka
+  startConsuming("chess-moves")
 
   // Initialize the API Client
   val apiClient = new ApiClient
@@ -45,11 +94,11 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
     )
     .preMaterialize()(materializer)
 
-  val flow = Flow[(String, String)].map { (oldPos, newPos) =>
+  val flow = Flow[(String, String)].map { case (oldPos, newPos) =>
     (oldPos, newPos)
   }
 
-  val sink: Sink[(String, String), Future[Done]] =
+  val sink: Sink[(String, String), _] =
     Sink.foreach[(String, String)] { case (oldPos, newPos) =>
       apiClient.processMove(oldPos, newPos)
       selection_system.changeState()
@@ -59,7 +108,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
 
   // Connect the Source, Flow, and Sink
   val runnableGraph = source.via(flow).toMat(sink)(Keep.right)
-  val materialized = runnableGraph.run()(materializer)
+  runnableGraph.run()(materializer)
 
   title = "Chess Game"
   preferredSize = new Dimension(800, 800)
@@ -124,7 +173,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
   class CellButton(pos: String, figure: String) extends Button(figure):
     listenTo(mouse.clicks)
     listenTo(keys)
-    reactions += { case ButtonClicked(button) =>
+    reactions += { case ButtonClicked(_) =>
       selectionHandler(pos, figure)
     }
 

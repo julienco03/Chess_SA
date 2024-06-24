@@ -15,22 +15,21 @@ import scalafx.scene.input.KeyCode.G
 import scala.swing.event.PopupMenuCanceled
 import javax.swing.JOptionPane
 
+import java.util.Properties
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.jdk.CollectionConverters._
+
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Sink, Source, Flow, Keep}
 import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy}
 import akka.{Done, NotUsed}
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import akka.kafka.{ProducerSettings, ConsumerSettings, Subscriptions}
 import akka.kafka.scaladsl.{Producer, Consumer}
+import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, NewTopic}
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.{StringSerializer, StringDeserializer}
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, NewTopic}
-import java.util.Properties
-import scala.jdk.CollectionConverters._
 
 class GUI(controller: ControllerInterface) extends Frame with Observer:
   controller.add(this)
@@ -78,9 +77,7 @@ class GUI(controller: ControllerInterface) extends Frame with Observer:
   }
 
   def handleKafkaMessage(message: String): Unit = {
-    // Instead of updating the GUI directly, perform a redo action
     apiClient.loadGame()
-    // update
   }
 
   // Start consuming messages from Kafka
